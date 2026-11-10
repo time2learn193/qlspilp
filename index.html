@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRU - Đầu Tư Vững Tiến | 3D Infographic & Mini Games</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            pru: {
+              red: '#ED1B2E',
+              darkred: '#B91220',
+              gold: '#F59E0B',
+              navy: '#0b132b',
+              sky: '#0284c7',
+              emerald: '#059669',
+              purple: '#7c3aed',
+            }
+          },
+          boxShadow: {
+        '3d-red': '0 20px 35px -10px rgba(237, 27, 46, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4)',
+        '3d-sky': '0 20px 35px -10px rgba(2, 132, 199, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4)',
+        '3d-gold': '0 20px 35px -10px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4)',
+        '3d-purple': '0 20px 35px -10px rgba(124, 58, 237, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4)',
+        'card-coverflow': '0 30px 60px -12px rgba(15, 23, 42, 0.35), 0 18px 36px -18px rgba(0, 0, 0, 0.2)',
+      }
+    }
+  }
+};
+</script>
+
+  <style>
+    /* ================= 3D STAGE & COVERFLOW ================= */
+    .coverflow-stage {
+      perspective: 1000px;
+      perspective-origin: 50% 50%;
+      height: 420px;
+      position: relative;
+      overflow: visible;
+      touch-action: pan-y;
+    }
+    @media (max-width: 640px) {
+      .coverflow-stage {
+        perspective: 700px;
+        height: 370px;
+      }
+    }
+
+    .coverflow-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none; /* Tránh cản trở sự kiện chạm của nút mũi tên */
+    }
+
+    .coverflow-card {
+      position: absolute;
+      width: clamp(230px, 68vw, 290px);
+      height: clamp(330px, 46vh, 370px);
+      border-radius: 20px;
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: pointer;
+      user-select: none;
+      transform-origin: center center;
+      backface-visibility: hidden;
+      overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      pointer-events: auto; /* Kích hoạt lại click cho card */
+    }
+
+    /* 3D Neomorphic/Glass Card Surfaces */
+    .surface-3d {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(241,245,249,0.85));
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .surface-3d-highlight {
+      background: linear-gradient(145deg, #ffffff, #f8fafc);
+      box-shadow: 6px 6px 14px rgba(148, 163, 184, 0.25), -6px -6px 14px rgba(255, 255, 255, 0.9);
+    }
+
+    /* Animations */
+    @keyframes floatCoinPiggy {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    @keyframes dropCoin {
+      0% { transform: translateY(-18px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(0px); opacity: 1; }
+    }
+    @keyframes pulseGlowGold {
+      0%, 100% { filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.6)); }
+      50% { filter: drop-shadow(0 0 26px rgba(245, 158, 11, 0.95)); }
+    }
+    .float-coin-piggy {
+      animation: floatCoinPiggy 3.2s ease-in-out infinite;
+    }
+    .pulse-glow-gold {
+      animation: pulseGlowGold 2.2s ease-in-out infinite;
+    }
+    .coin-drop {
+      animation: dropCoin 1.8s ease-in-out infinite;
+    }
+
+    .glass-btn {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .glass-btn:hover {
+      background: rgba(255, 255, 255, 0.98);
+      transform: scale(1.08);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    }
+    .glass-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Custom Scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-slate-50 via-slate-100/70 to-slate-200 text-slate-800 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-red-500 selection:text-white">
+
+  <!-- ================= TOP HEADER (COMPACT - ĐÃ BỎ NÚT ÂM THANH & ĐẤU TRƯỜNG) ================= -->
+  <header class="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-3 pb-1">
+    <div class="flex items-center justify-between gap-2">
+      <!-- Brand Logo & Header Info -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-pru-red to-pru-darkred p-1.5 flex items-center justify-center shadow-md shadow-red-500/25 text-white font-black text-sm sm:text-lg shrink-0">
+          PRU
+        </div>
+        <div>
+          <span class="text-[9px] sm:text-[10px] font-black tracking-wider text-pru-red uppercase block leading-none">PRUDENTIAL • ILP 2005</span>
+          <h1 class="text-sm sm:text-xl font-black text-slate-900 leading-tight">PRU-Đầu Tư Vững Tiến</h1>
+        </div>
+      </div>
+
+      <div class="text-[10px] sm:text-xs font-bold text-slate-500 bg-white/80 px-2.5 py-1 rounded-full border border-slate-200 shadow-sm">
+        Slide 04 → 07
+      </div>
+
+      <!-- Nút Âm Thanh Nổi Bật Để Người Dùng Nhận Biết Và Test Trực Tiếp -->
+      <button 
+        type="button" 
+        id="btnSoundToggle"
+        onclick="toggleSoundManual(this)" 
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 text-[11px] font-black hover:bg-emerald-500/20 active:scale-95 transition cursor-pointer"
+        title="Bật/Tắt âm thanh tương tác">
+        <span id="soundIcon">🔊</span>
+        <span id="soundText">Âm thanh: BẬT</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= COVERFLOW HERO SECTION ================= -->
+  <main class="w-full max-w-6xl mx-auto px-2 sm:px-4 py-1 sm:py-2 flex-1 flex flex-col justify-center items-center relative">
+    
+    <!-- Title Headline -->
+    <div class="text-center max-w-2xl mx-auto mb-1 sm:mb-2 px-2">
+      <h2 class="text-base sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+        Khám Phá Quyền Lợi <span class="bg-gradient-to-r from-pru-red to-amber-500 bg-clip-text text-transparent">PRU-Đầu Tư Vững Tiến</span>
+      </h2>
+      <p class="text-slate-500 text-[10px] sm:text-xs md:text-sm mt-0.5 font-medium">
+        Lướt chọn các thẻ 3D để xem nội dung nguyên văn Slide 04 - 07 & chơi game ôn tập toàn quyền lợi.
+      </p>
+    </div>
+
+    <!-- 3D Coverflow Stage -->
+    <div class="relative w-full coverflow-stage flex items-center justify-center">
+      
+      <!-- Prev Button (Đặt z-[60], touch-action và xử lý sự kiện độc lập) -->
+      <button 
+        type="button" 
+        id="btnPrevNav"
+        class="absolute left-1 sm:left-4 md:left-8 z-[60] w-10 h-10 sm:w-11 sm:h-11 rounded-full glass-btn flex items-center justify-center text-slate-800 shadow-xl cursor-pointer active:scale-90 transition-transform select-none" 
+        aria-label="Previous Benefit"
+        style="touch-action: manipulation; pointer-events: auto;">
+        <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+
+      <!-- Next Button (Đặt z-[60], touch-action và xử lý sự kiện độc lập) -->
+      <button 
+        type="button" 
+        id="btnNextNav"
+        class="absolute right-1 sm:right-4 md:right-8 z-[60] w-10 h-10 sm:w-11 sm:h-11 rounded-full glass-btn flex items-center justify-center text-slate-800 shadow-xl cursor-pointer active:scale-90 transition-transform select-none" 
+        aria-label="Next Benefit"
+        style="touch-action: manipulation; pointer-events: auto;">
+        <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- 3D Cards Container -->
+      <div id="coverflowTrack" class="coverflow-track">
+        
+        <!-- CARD 1: AN TÂM TRỌN VẸN (SLIDE 04, 05, 06, 07) -->
+        <div class="coverflow-card group" data-index="0" onclick="handleCardClick(0)">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/30 z-10"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-red-600/50 via-slate-900 to-black"></div>
+          
+          <div class="relative z-20 h-full w-full p-3.5 sm:p-5 flex flex-col justify-between text-white">
+            <div class="flex items-center justify-between">
+              <span class="bg-red-500/90 backdrop-blur-md text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 rounded-full border border-red-400/40">
+                Phần ①
+              </span>
+              <span class="text-[9px] sm:text-[11px] font-mono font-bold tracking-widest text-red-300">SLIDE 04 → 07</span>
+            </div>
+
+            <!-- 3D Shield Icon -->
+            <div class="my-auto py-1 flex flex-col items-center justify-center">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 float-coin-piggy">
+                <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-xl">
+                  <defs>
+                    <linearGradient id="shieldGrad3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FF5252"/>
+                      <stop offset="50%" stop-color="#ED1B2E"/>
+                      <stop offset="100%" stop-color="#8B0000"/>
+                    </linearGradient>
+                    <radialGradient id="heartGlow" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#FDE047"/>
+                      <stop offset="100%" stop-color="#EAB308"/>
+                    </radialGradient>
+                  </defs>
+                  <path d="M60 8 C88 8 108 22 108 50 C108 86 60 112 60 112 C60 112 12 86 12 50 C12 22 32 8 60 8 Z" fill="url(#shieldGrad3d)" stroke="#FFFFFF" stroke-width="3"/>
+                  <path d="M60 18 C82 18 96 28 96 52 C96 80 60 102 60 102 C60 102 24 80 24 52 C24 28 38 18 60 18 Z" fill="#991B1B" opacity="0.4"/>
+                  <path d="M60 44 C55 36 42 36 37 45 C31 58 60 76 60 76 C60 76 89 58 83 45 C78 36 65 36 60 44 Z" fill="url(#heartGlow)" stroke="#FFF" stroke-width="2"/>
+                  <polygon points="34,28 36,32 40,33 36,35 34,39 32,35 28,33 32,32" fill="#FEF08A"/>
+                </svg>
+              </div>
+              <span class="text-[8px] sm:text-[9px] font-bold tracking-wider text-red-300 uppercase mt-1 text-center">Bảo Vệ Đến 110% STBH (*) + GTTKHĐ</span>
+            </div>
+
+            <div>
+              <h3 class="text-sm sm:text-base font-black leading-snug">AN TÂM TRỌN VẸN</h3>
+              <p class="text-[10px] sm:text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-2">Bảo vệ rủi ro Tử vong, TTTBVV (Không do & Do UTTG sớm), Cột mốc tăng STBH.</p>
+              
+              <div class="mt-1.5 flex items-center justify-between text-[10px] sm:text-xs font-bold text-red-400 group-hover:text-red-300">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
+                  Xem chi tiết & Ôn tập
+                </span>
+                <span>➔</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: ĐẦU TƯ CÓ TRÁCH NHIỆM VÀ TIN CẬY (SLIDE 04, 08, 09, 10) -->
+        <div class="coverflow-card group" data-index="1" onclick="handleCardClick(1)">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/30 z-10"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-sky-600/50 via-slate-900 to-black"></div>
+          
+          <div class="relative z-20 h-full w-full p-3.5 sm:p-5 flex flex-col justify-between text-white">
+            <div class="flex items-center justify-between">
+              <span class="bg-sky-500/90 backdrop-blur-md text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 rounded-full border border-sky-400/40">
+                Phần ②
+              </span>
+              <span class="text-[9px] sm:text-[11px] font-mono font-bold tracking-widest text-sky-300">SLIDE 08 → 10</span>
+            </div>
+
+            <div class="my-auto py-1 flex flex-col items-center justify-center">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 float-coin-piggy">
+                <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-xl">
+                  <defs>
+                    <linearGradient id="skyGrad3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#38BDF8"/>
+                      <stop offset="60%" stop-color="#0284C7"/>
+                      <stop offset="100%" stop-color="#0369A1"/>
+                    </linearGradient>
+                  </defs>
+                  <polygon points="60,8 104,32 104,88 60,112 16,88 16,32" fill="url(#skyGrad3d)" stroke="#FFFFFF" stroke-width="3"/>
+                  <polygon points="60,18 94,38 94,82 60,102 26,82 26,38" fill="#0c4a6e" opacity="0.45"/>
+                  <rect x="34" y="62" width="11" height="26" rx="3" fill="#BAE6FD"/>
+                  <rect x="49" y="48" width="11" height="40" rx="3" fill="#7DD3FC"/>
+                  <rect x="64" y="36" width="11" height="52" rx="3" fill="#38BDF8"/>
+                  <rect x="79" y="24" width="11" height="64" rx="3" fill="#FFFFFF"/>
+                  <path d="M40 50 Q60 30 85 24" stroke="#FDE047" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                  <polygon points="88,24 80,20 81,29" fill="#FDE047"/>
+                </svg>
+              </div>
+              <span class="text-[8px] sm:text-[9px] font-bold tracking-wider text-sky-300 uppercase mt-1 text-center">7 Quỹ PRUlink - Eastspring</span>
+            </div>
+
+            <div>
+              <h3 class="text-sm sm:text-base font-black leading-snug">ĐẦU TƯ TRÁCH NHIỆM & TIN CẬY</h3>
+              <p class="text-[10px] sm:text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-2">7 Quỹ PRUlink, Eastspring quản lý 175,7 nghìn tỷ, 3 ưu điểm & bảng tỷ suất.</p>
+              
+              <div class="mt-1.5 flex items-center justify-between text-[10px] sm:text-xs font-bold text-sky-400 group-hover:text-sky-300">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span>
+                  Xem chi tiết & Ôn tập
+                </span>
+                <span>➔</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: CƠ HỘI GIA TĂNG TÍCH LŨY TÀI SẢN HIỆU QUẢ -->
+        <div class="coverflow-card group" data-index="2" onclick="handleCardClick(2)">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/30 z-10"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-500/50 via-slate-900 to-black"></div>
+          
+          <div class="relative z-20 h-full w-full p-3.5 sm:p-5 flex flex-col justify-between text-white">
+            <div class="flex items-center justify-between">
+              <span class="bg-amber-500/90 backdrop-blur-md text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 rounded-full border border-amber-400/40">
+                Phần ③
+              </span>
+              <span class="text-[9px] sm:text-[11px] font-mono font-bold tracking-widest text-amber-300">SLIDE 10 → 11</span>
+            </div>
+
+            <!-- 3D Piggy Bank & Falling Gold Coins -->
+            <div class="my-auto py-1 flex flex-col items-center justify-center">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 float-coin-piggy">
+                <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-xl">
+                  <defs>
+                    <linearGradient id="piggyGrad3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FCD34D"/>
+                      <stop offset="50%" stop-color="#F59E0B"/>
+                      <stop offset="100%" stop-color="#B45309"/>
+                    </linearGradient>
+                    <linearGradient id="coinGrad3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FEF08A"/>
+                      <stop offset="50%" stop-color="#EAB308"/>
+                      <stop offset="100%" stop-color="#A16207"/>
+                    </linearGradient>
+                  </defs>
+                  
+                  <g class="pulse-glow-gold coin-drop">
+                    <circle cx="60" cy="18" r="10.5" fill="url(#coinGrad3d)" stroke="#FFFFFF" stroke-width="2"/>
+                    <text x="60" y="22" text-anchor="middle" font-size="10.5" font-weight="900" fill="#78350F">₫</text>
+                  </g>
+                  
+                  <ellipse cx="60" cy="68" rx="42" ry="32" fill="url(#piggyGrad3d)" stroke="#FFFFFF" stroke-width="3"/>
+                  <rect x="48" y="38" width="24" height="5" rx="2.5" fill="#78350F"/>
+                  <path d="M35 44 C35 34 45 32 46 45 Z" fill="#F59E0B" stroke="#FFF" stroke-width="2"/>
+                  <ellipse cx="24" cy="68" rx="12" ry="9" fill="#FDE68A" stroke="#B45309" stroke-width="2"/>
+                  <circle cx="21" cy="68" r="2.5" fill="#78350F"/>
+                  <circle cx="27" cy="68" r="2.5" fill="#78350F"/>
+                  <circle cx="38" cy="56" r="3.5" fill="#1E293B"/>
+                  <circle cx="39" cy="55" r="1.2" fill="#FFFFFF"/>
+                  <rect x="38" y="94" width="10" height="12" rx="4" fill="#D97706" stroke="#FFF" stroke-width="1.5"/>
+                  <rect x="72" y="94" width="10" height="12" rx="4" fill="#D97706" stroke="#FFF" stroke-width="1.5"/>
+                  <polygon points="98,40 100,45 105,47 100,49 98,54 96,49 91,47 96,45" fill="#FEF08A"/>
+                </svg>
+              </div>
+              <span class="text-[8px] sm:text-[9px] font-bold tracking-wider text-amber-300 uppercase mt-1 text-center">Thưởng Kép Đến 300% & Đáo Hạn</span>
+            </div>
+
+            <div>
+              <h3 class="text-sm sm:text-base font-black leading-snug">GIA TĂNG TÍCH LŨY TÀI SẢN</h3>
+              <p class="text-[10px] sm:text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-2">Thưởng Tăng Trưởng, Thưởng Gắn Kết từ năm 10, Đáo hạn 100% GTTKHĐ.</p>
+              
+              <div class="mt-1.5 flex items-center justify-between text-[10px] sm:text-xs font-bold text-amber-400 group-hover:text-amber-300">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                  Xem chi tiết & Ôn tập
+                </span>
+                <span>➔</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: VẸN TOÀN TRÁCH NHIỆM YÊU THƯƠNG -->
+        <div class="coverflow-card group" data-index="3" onclick="handleCardClick(3)">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/30 z-10"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-purple-600/50 via-slate-900 to-black"></div>
+          
+          <div class="relative z-20 h-full w-full p-3.5 sm:p-5 flex flex-col justify-between text-white">
+            <div class="flex items-center justify-between">
+              <span class="bg-purple-500/90 backdrop-blur-md text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 rounded-full border border-purple-400/40">
+                Phần ④
+              </span>
+              <span class="text-[9px] sm:text-[11px] font-mono font-bold tracking-widest text-purple-300">SLIDE 12 → 13</span>
+            </div>
+
+            <div class="my-auto py-1 flex flex-col items-center justify-center">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 float-coin-piggy">
+                <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-xl">
+                  <defs>
+                    <linearGradient id="purpGrad3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#C084FC"/>
+                      <stop offset="50%" stop-color="#9333EA"/>
+                      <stop offset="100%" stop-color="#6B21A8"/>
+                    </linearGradient>
+                    <linearGradient id="keyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FDE047"/>
+                      <stop offset="100%" stop-color="#D97706"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="60" cy="60" r="48" fill="url(#purpGrad3d)" stroke="#FFFFFF" stroke-width="3"/>
+                  <path d="M60 38 C54 28 38 28 33 40 C26 56 60 78 60 78 C60 78 94 56 87 40 C82 28 66 28 60 38 Z" fill="#F43F5E" stroke="#FFF" stroke-width="2"/>
+                  <circle cx="72" cy="50" r="7" fill="url(#keyGrad)" stroke="#78350F" stroke-width="2"/>
+                  <rect x="52" y="48" width="16" height="4" fill="url(#keyGrad)" stroke="#78350F" stroke-width="1"/>
+                  <rect x="54" y="52" width="3" height="4" fill="url(#keyGrad)"/>
+                  <rect x="60" y="52" width="3" height="3" fill="url(#keyGrad)"/>
+                </svg>
+              </div>
+              <span class="text-[8px] sm:text-[9px] font-bold tracking-wider text-purple-300 uppercase mt-1 text-center">Đặc Quyền Chuyển Giao & 6 Quyền</span>
+            </div>
+
+            <div>
+              <h3 class="text-sm sm:text-base font-black leading-snug">VẸN TOÀN TRÁCH NHIỆM</h3>
+              <p class="text-[10px] sm:text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-2">Chuyển giao giá trị tích lũy sang HĐ mới (0đ phí ban đầu) & 6 quyền BMBH.</p>
+              
+              <div class="mt-1.5 flex items-center justify-between text-[10px] sm:text-xs font-bold text-purple-400 group-hover:text-purple-300">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping"></span>
+                  Xem chi tiết & Ôn tập
+                </span>
+                <span>➔</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 5: CARD MỚI - ÔN TẬP TOÀN BỘ QUYỀN LỢI SẢN PHẨM (GAME VƯỢT ẢI 8 CÂU HỎI) -->
+        <div class="coverflow-card group" data-index="4" onclick="handleCardClick(4)">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/30 z-10"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-emerald-600/60 via-slate-900 to-black"></div>
+          
+          <div class="relative z-20 h-full w-full p-3.5 sm:p-5 flex flex-col justify-between text-white">
+            <div class="flex items-center justify-between">
+              <span class="bg-emerald-500/90 backdrop-blur-md text-[9px] sm:text-[10px] font-black uppercase px-2 py-0.5 rounded-full border border-emerald-400/40">
+                Game Tổng Ôn
+              </span>
+              <span class="text-[9px] sm:text-[11px] font-mono font-bold tracking-widest text-emerald-300">8 ẢI THỬ THÁCH</span>
+            </div>
+
+            <!-- Dynamic 3D Trophy / Crown Animation -->
+            <div class="my-auto py-1 flex flex-col items-center justify-center">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 float-coin-piggy">
+                <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-2xl">
+                  <defs>
+                    <linearGradient id="trophyGrad3d" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#FDE047"/>
+                      <stop offset="50%" stop-color="#EAB308"/>
+                      <stop offset="100%" stop-color="#A16207"/>
+                    </linearGradient>
+                    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#FFFFFF"/>
+                      <stop offset="100%" stop-color="#F59E0B"/>
+                    </radialGradient>
+                  </defs>
+                  
+                  <!-- Cup Cup Body -->
+                  <path d="M35 24 L85 24 L78 65 C74 80 46 80 42 65 Z" fill="url(#trophyGrad3d)" stroke="#FFFFFF" stroke-width="2.5"/>
+                  
+                  <!-- Handles -->
+                  <path d="M35 32 C18 32 18 56 37 60" fill="none" stroke="#FDE047" stroke-width="4.5" stroke-linecap="round"/>
+                  <path d="M85 32 C102 32 102 56 83 60" fill="none" stroke="#FDE047" stroke-width="4.5" stroke-linecap="round"/>
+                  
+                  <!-- Stem & Base -->
+                  <rect x="54" y="78" width="12" height="16" rx="2" fill="#CA8A04"/>
+                  <polygon points="36,106 84,106 76,94 44,94" fill="url(#trophyGrad3d)" stroke="#FFF" stroke-width="1.5"/>
+                  
+                  <!-- Star Badge -->
+                  <polygon points="60,40 63,48 72,48 65,54 68,62 60,57 52,62 55,54 48,48 57,48" fill="url(#starGlow)"/>
+                </svg>
+              </div>
+              <span class="text-[8px] sm:text-[9px] font-bold tracking-wider text-emerald-300 uppercase mt-1 text-center">Ôn Toàn Bộ Quyền Lợi Slide 04 - 07</span>
+            </div>
+
+            <div>
+              <h3 class="text-sm sm:text-base font-black leading-snug">VƯỢT ẢI BẬC THẦY PRU</h3>
+              <p class="text-[10px] sm:text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-2">8 câu hỏi tương tác tổng ôn điều kiện tham gia, quyền lợi rủi ro, 7 quỹ, thưởng kép & chuyển giao.</p>
+              
+              <div class="mt-1.5 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-400 group-hover:text-emerald-300">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  Bấm Vào Chơi Ngay 🎮
+                </span>
+                <span>➔</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Caption Below Coverflow -->
+    <div class="text-center max-w-lg mx-auto mt-1 min-h-[38px] px-2">
+      <p id="coverflowCaption" class="text-[10px] sm:text-xs text-slate-700 font-bold leading-relaxed transition-opacity duration-300">
+        <!-- Injected via JS -->
+      </p>
+    </div>
+
+    <!-- Pagination Dots -->
+    <div id="paginationDots" class="flex items-center justify-center gap-1.5 mt-1 mb-1"></div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 text-center text-[11px] text-slate-500 border-t border-slate-300/80 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <div>Sản phẩm bảo hiểm liên kết đơn vị <b>PRU-Đầu Tư Vững Tiến</b> • Prudential Việt Nam</div>
+    <div class="font-bold text-slate-700">Nguyên văn 100% nội dung từ Slide 04 đến Slide 07 Brochure ILP</div>
+  </footer>
+
+  <!-- ================= MODAL: 100% NGUYÊN VĂN NỘI DUNG TỪNG PHẦN & ÔN TẬP ================= -->
+  <div id="infographicModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="relative bg-white w-full max-w-5xl rounded-3xl shadow-2xl border border-slate-100 flex flex-col max-h-[92vh] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div id="modalHeaderBg" class="px-6 py-5 sm:px-8 border-b border-white/10 flex items-center justify-between text-white transition-colors duration-300">
+        <div class="flex items-center gap-4">
+          <div id="modalHeaderIcon" class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center p-2 shadow-inner">
+            <!-- Dynamic SVG -->
+          </div>
+          <div>
+            <span id="modalHeaderTag" class="text-[11px] uppercase font-black tracking-widest text-white/80 block">BROCHURE NGUYÊN VĂN</span>
+            <h3 id="modalHeaderTitle" class="text-lg sm:text-2xl font-black">Tiêu Đề Trụ Cột</h3>
+          </div>
+        </div>
+        <button onclick="closeInfographicModal()" class="w-10 h-10 rounded-2xl bg-black/20 hover:bg-black/30 text-white flex items-center justify-center text-xl font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Navigation Tabs Inside Modal -->
+      <div class="flex border-b border-slate-200 bg-slate-50/80 px-6 sm:px-8 pt-3 gap-3 text-xs sm:text-sm font-bold">
+        <button id="modalTabTheoryBtn" onclick="switchInfographicTab('theory')" class="px-5 py-3 border-b-4 border-pru-red text-pru-red flex items-center gap-2 transition">
+          <span>📑 Toàn Bộ Nội Dung Quyền Lợi</span>
+        </button>
+        <button id="modalTabQuizBtn" onclick="switchInfographicTab('quiz')" class="px-5 py-3 border-b-4 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition">
+          <span>🎯 Ôn Luyện Tương Tác Phần Này</span>
+          <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-black">Mini Game</span>
+        </button>
+      </div>
+
+      <!-- Scrollable Modal Body -->
+      <div id="modalScrollArea" class="p-5 sm:p-8 overflow-y-auto custom-scroll flex-1 text-slate-700 bg-slate-50/50">
+        
+        <!-- View 1: 100% Full Content -->
+        <div id="infographicBody" class="space-y-6">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- View 2: Mini Quiz of Section -->
+        <div id="miniQuizBody" class="hidden space-y-6">
+          <!-- Injected via JS -->
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-white border-t border-slate-200 px-6 py-4 sm:px-8 flex flex-wrap items-center justify-between gap-3">
+        <div class="text-xs text-slate-500">
+          Tất cả đặc tính và quyền lợi tuân thủ Quy tắc & Điều khoản sản phẩm PRU-Đầu Tư Vững Tiến.
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button id="toggleTabBtn" onclick="toggleModalTabAction()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-md">
+            <span>Làm Bài Ôn Tập 🎯</span>
+          </button>
+          <button onclick="closeInfographicModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+            Đóng
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= GRAND REVIEW GAME: ĐẤU TRƯỜNG TỔNG ÔN ================= -->
+  <div id="grandGameModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="relative bg-slate-900 text-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-800 flex flex-col max-h-[92vh] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Top Bar -->
+      <div class="px-6 py-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl animate-spin" style="animation-duration: 8s;">🏆</span>
+          <div>
+            <span class="text-[10px] uppercase font-black tracking-widest text-amber-400 block">GAME ÔN TẬP TOÀN BỘ QUYỀN LỢI SẢN PHẨM</span>
+            <h3 class="text-base sm:text-xl font-black">Vượt Ải Bậc Thầy PRU Vững Tiến</h3>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700 text-right">
+            <span class="text-[10px] text-slate-400 font-bold block">ĐIỂM SỐ</span>
+            <span id="gameCurrentScore" class="text-base font-black text-amber-400">0</span>
+          </div>
+
+          <button onclick="closeGrandGameModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center text-base font-bold transition">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Track -->
+      <div class="w-full bg-slate-800 h-2">
+        <div id="gameProgressBar" class="bg-gradient-to-r from-red-500 via-amber-400 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+      </div>
+
+      <!-- Game Stage -->
+      <div class="p-6 sm:p-8 overflow-y-auto custom-scroll flex-1 flex flex-col justify-between">
+        
+        <!-- Screen 1: Start -->
+        <div id="gameStartScreen" class="text-center my-auto py-8">
+          <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-tr from-amber-500 to-red-500 rounded-3xl p-5 flex items-center justify-center shadow-xl shadow-red-500/20">
+            <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h4 class="text-2xl sm:text-3xl font-black text-white">Chinh Phục 8 Câu Hỏi Toàn Quyền Lợi</h4>
+          <p class="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto mt-2 leading-relaxed">
+            Hệ thống câu hỏi bao quát 100% nguyên văn: Điều kiện tham gia, Chi trả rủi ro, 7 Quỹ PRUlink, Thưởng kép lên đến 300%, Đáo hạn và Đặc quyền chuyển giao.
+          </p>
+          <div class="mt-8 flex justify-center">
+            <button onclick="startGrandGame()" class="bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-black text-base px-8 py-4 rounded-2xl shadow-xl shadow-red-500/30 transform hover:scale-105 active:scale-95 transition">
+              Bắt Đầu Vượt Ải Ngay 🚀
+            </button>
+          </div>
+        </div>
+
+        <!-- Screen 2: Question Playing -->
+        <div id="gamePlayScreen" class="hidden space-y-6">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+            <span id="gameQuestionCounter">ẢI 1 / 8</span>
+            <span id="gameCategoryTag" class="text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full uppercase">CHỦ ĐỀ</span>
+          </div>
+
+          <div class="bg-slate-800/60 p-5 sm:p-6 rounded-2xl border border-slate-700/80">
+            <h4 id="gameQuestionText" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+              Câu hỏi tình huống hiển thị ở đây...
+            </h4>
+          </div>
+
+          <div id="gameOptionsContainer" class="grid grid-cols-1 gap-3">
+            <!-- Injected via JS -->
+          </div>
+
+          <div id="gameFeedbackBox" class="hidden p-4 rounded-xl text-xs font-semibold leading-relaxed border transition-all"></div>
+        </div>
+
+        <!-- Screen 3: Victory -->
+        <div id="gameResultScreen" class="hidden text-center my-auto py-8">
+          <div class="text-6xl mb-3 animate-bounce">👑</div>
+          <h4 class="text-2xl sm:text-3xl font-black text-amber-400" id="gameResultRank">Bậc Thầy PRU Vững Tiến!</h4>
+          <p id="gameFinalScoreText" class="text-slate-300 text-sm mt-2">Bạn đã trả lời đúng 8/8 câu hỏi xuất sắc.</p>
+          
+          <div class="mt-8 flex flex-wrap justify-center gap-3">
+            <button onclick="startGrandGame()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-black text-sm px-6 py-3 rounded-xl transition">
+              Chơi Lại Vòng Khác 🔁
+            </button>
+            <button onclick="closeGrandGameModal()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm px-6 py-3 rounded-xl transition">
+              Trở Về Màn Hình Chính
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Bar -->
+      <div id="gameFooterBar" class="hidden px-6 py-3 bg-slate-950/80 border-t border-slate-800 items-center justify-between">
+        <span class="text-xs text-slate-500">Trả lời đúng nhận +100 điểm cho mỗi câu.</span>
+        <button id="gameNextBtn" onclick="nextGrandQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs px-5 py-2.5 rounded-xl transition">
+          Tiếp Tục Ải Kế Tiếp ➔
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT: COVERFLOW, FULL DATA & GAME LOGIC ================= -->
+  <script>
+    /* ================= 1. WEB AUDIO SYNTHESIZER SIÊU NHẠY & TƯƠNG THÍCH MỌI THIẾT BỊ ================= */
+    let audioCtx = null;
+    let isSoundMuted = false;
+
+    // Hàm đánh thức & khởi tạo AudioContext đồng bộ trực tiếp với Touch/Click
+    function getAudioContext() {
+      if (isSoundMuted) return null;
+      try {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioClass) return null;
+        if (!audioCtx) {
+          audioCtx = new AudioClass();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      } catch (err) {
+        console.warn("AudioContext error:", err);
+        return null;
+      }
+    }
+
+    // Đánh thức âm thanh ngay ở cử chỉ đầu tiên (Touchstart, Touchend, Mousedown)
+    function wakeAudioOnFirstTouch() {
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
+      }
+    }
+    window.addEventListener('touchstart', wakeAudioOnFirstTouch, { once: false, passive: true });
+    window.addEventListener('touchend', wakeAudioOnFirstTouch, { once: false, passive: true });
+    window.addEventListener('click', wakeAudioOnFirstTouch, { once: false, passive: true });
+
+    function toggleSoundManual(btn) {
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
+      }
+      isSoundMuted = !isSoundMuted;
+      const icon = document.getElementById('soundIcon');
+      const text = document.getElementById('soundText');
+      if (isSoundMuted) {
+        icon.innerText = '🔇';
+        text.innerText = 'Âm thanh: TẮT';
+        btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-200 border border-slate-300 text-slate-600 text-[11px] font-black active:scale-95 transition cursor-pointer";
+      } else {
+        icon.innerText = '🔊';
+        text.innerText = 'Âm thanh: BẬT';
+        btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 text-[11px] font-black hover:bg-emerald-500/20 active:scale-95 transition cursor-pointer";
+        playSoundEffect('correct'); // Phát âm chuông kiểm tra loa ngay lập tức
+      }
+    }
+
+    function playSoundEffect(type) {
+      if (isSoundMuted) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        
+        // Đảm bảo trạng thái chạy
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+
+        const now = ctx.currentTime;
+
+        if (type === 'swipe') {
+          // Âm chuyển slide/lướt thẻ: Tiếng "Vút" gió ngân
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.linearRampToValueAtTime(580, now + 0.1);
+          
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+
+        } else if (type === 'correct') {
+          // Âm trả lời ĐÚNG: Hợp âm Đô Trưởng (C5 - E5 - G5) trong trẻo, to rõ
+          const notes = [523.25, 659.25, 783.99];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const startTime = now + idx * 0.07;
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
+            
+            gain.gain.setValueAtTime(0.4, startTime);
+            gain.gain.linearRampToValueAtTime(0.01, startTime + 0.28);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.3);
+          });
+
+        } else if (type === 'wrong') {
+          // Âm báo SAI: Tiếng đục trầm (Buzzer đúp)
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          
+          osc1.type = 'sawtooth';
+          osc2.type = 'square';
+          osc1.frequency.setValueAtTime(140, now);
+          osc2.frequency.setValueAtTime(110, now);
+          
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+          
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.25);
+          osc2.stop(now + 0.25);
+
+        } else if (type === 'fanfare') {
+          // Âm chiến thắng VƯỢT ẢI: Chuỗi 4 nốt khải hoàn
+          const fanNotes = [
+            { f: 523.25, d: 0.1 },  // C5
+            { f: 659.25, d: 0.1 },  // E5
+            { f: 783.99, d: 0.12 }, // G5
+            { f: 1046.5, d: 0.4 }   // C6
+          ];
+          let curTime = now;
+          fanNotes.forEach(item => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(item.f, curTime);
+            
+            gain.gain.setValueAtTime(0.4, curTime);
+            gain.gain.linearRampToValueAtTime(0.01, curTime + item.d);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(curTime);
+            osc.stop(curTime + item.d);
+            curTime += item.d * 0.9;
+          });
+        }
+      } catch (err) {
+        console.warn("Sound play error:", err);
+      }
+    }
+
+    /* ================= 2. 3D COVERFLOW ENGINE (5 CARDS, KHÔNG BỊ CẮT ĐẦU ĐUÔI) ================= */
+    let currentCardIndex = 1;
+    const totalCards = 5;
+
+    const CAPTIONS = [
+      "① AN TÂM TRỌN VẸN: Bảo vệ lên đến 110% Số Tiền Bảo Hiểm (*) cộng Giá Trị Tài Khoản Hợp Đồng.",
+      "② ĐẦU TƯ CÓ TRÁCH NHIỆM VÀ TIN CẬY: 7 Quỹ liên kết đơn vị PRUlink do Eastspring Investments quản lý.",
+      "③ CƠ HỘI GIA TĂNG TÍCH LŨY TÀI SẢN HIỆU QUẢ: Thưởng kép lên đến 300% Phí Cơ Bản từ năm thứ 10 & 100% GTTKHĐ khi đáo hạn.",
+      "④ VẸN TOÀN TRÁCH NHIỆM YÊU THƯƠNG: Đặc quyền chuyển giao giá trị tích lũy sang HĐ mới (0đ phí ban đầu) & 6 quyền chủ động của BMBH.",
+      "🏆 GAME ÔN TẬP TOÀN BỘ QUYỀN LỢI: Chinh phục 8 câu hỏi tình huống phủ kín 100% nội dung Slide 04 đến Slide 07!"
+    ];
+
+    function updateCoverflow() {
+      const cards = document.querySelectorAll('.coverflow-card');
+      const w = window.innerWidth;
+      const isMobile = w < 640;
+      
+      // Responsive spacing and scale adjustments
+      const spacing = isMobile ? Math.min(95, w * 0.25) : (w < 1024 ? 150 : 210);
+      const rotateDeg = isMobile ? 28 : 40;
+
+      cards.forEach((card, index) => {
+        const offset = index - currentCardIndex;
+        const absOffset = Math.abs(offset);
+
+        if (offset === 0) {
+          card.style.transform = `translateX(0px) translateZ(${isMobile ? 50 : 90}px) rotateY(0deg) scale(${isMobile ? 1.02 : 1.05})`;
+          card.style.zIndex = 30;
+          card.style.opacity = '1';
+          card.style.filter = 'none';
+          card.style.pointerEvents = 'auto';
+          card.classList.add('shadow-card-coverflow');
+        } else if (offset > 0) {
+          const transX = offset * spacing;
+          card.style.transform = `translateX(${transX}px) translateZ(-${absOffset * (isMobile ? 55 : 75)}px) rotateY(-${rotateDeg}deg) scale(${Math.max(0.72, 1 - absOffset * 0.12)})`;
+          card.style.zIndex = 20 - absOffset;
+          card.style.opacity = isMobile ? (absOffset > 1 ? '0' : '0.45') : (absOffset > 2 ? '0.2' : '0.65');
+          card.style.filter = 'brightness(0.65)';
+          card.style.pointerEvents = isMobile ? 'none' : 'auto';
+          card.classList.remove('shadow-card-coverflow');
+        } else {
+          const transX = offset * spacing;
+          card.style.transform = `translateX(${transX}px) translateZ(-${absOffset * (isMobile ? 55 : 75)}px) rotateY(${rotateDeg}deg) scale(${Math.max(0.72, 1 - absOffset * 0.12)})`;
+          card.style.zIndex = 20 - absOffset;
+          card.style.opacity = isMobile ? (absOffset > 1 ? '0' : '0.45') : (absOffset > 2 ? '0.2' : '0.65');
+          card.style.filter = 'brightness(0.65)';
+          card.style.pointerEvents = isMobile ? 'none' : 'auto';
+          card.classList.remove('shadow-card-coverflow');
+        }
+      });
+
+      const captionEl = document.getElementById('coverflowCaption');
+      captionEl.style.opacity = '0';
+      setTimeout(() => {
+        captionEl.innerText = CAPTIONS[currentCardIndex];
+        captionEl.style.opacity = '1';
+      }, 150);
+
+      renderPaginationDots();
+    }
+
+    function renderPaginationDots() {
+      const dotsContainer = document.getElementById('paginationDots');
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < totalCards; i++) {
+        const dot = document.createElement('button');
+        dot.className = `h-2 rounded-full transition-all duration-300 ${
+          i === currentCardIndex 
+            ? 'w-7 bg-sky-500 shadow-md shadow-sky-400/50' 
+            : 'w-2 bg-slate-300 hover:bg-slate-400'
+        }`;
+        dot.onclick = () => {
+          if (currentCardIndex !== i) {
+            playSoundEffect('swipe');
+            currentCardIndex = i;
+            updateCoverflow();
+          }
+        };
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function nextCard() {
+      playSoundEffect('swipe');
+      currentCardIndex = (currentCardIndex + 1) % totalCards;
+      updateCoverflow();
+    }
+
+    function prevCard() {
+      playSoundEffect('swipe');
+      currentCardIndex = (currentCardIndex - 1 + totalCards) % totalCards;
+      updateCoverflow();
+    }
+
+    function handleCardClick(clickedIndex) {
+      if (Date.now() < suppressCardClickUntil) return;
+      if (clickedIndex === currentCardIndex) {
+        if (clickedIndex === 4) {
+          // Card 5 opens Grand Game directly
+          openGrandGameModal();
+        } else {
+          openInfographicModal(clickedIndex + 1);
+        }
+      } else {
+        playSoundEffect('swipe');
+        currentCardIndex = clickedIndex;
+        updateCoverflow();
+      }
+    }
+
+    // Touch Support: Chỉ lắng nghe trên track và bỏ qua nếu chạm trúng nút điều hướng
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let suppressCardClickUntil = 0;
+    const coverflowTrack = document.getElementById('coverflowTrack');
+    
+    if (coverflowTrack) {
+      coverflowTrack.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      coverflowTrack.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diffX = touchStartX - touchEndX;
+        if (Math.abs(diffX) > 40) {
+          suppressCardClickUntil = Date.now() + 450;
+          if (diffX > 0) nextCard();
+          else prevCard();
+        }
+      }, { passive: true });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextCard();
+      if (e.key === 'ArrowLeft') prevCard();
+      if (e.key === 'Escape') {
+        closeInfographicModal();
+        closeGrandGameModal();
+      }
+    });
+
+    window.addEventListener('resize', updateCoverflow);
+
+    /* ================= 3. 100% NGUYÊN VĂN NỘI DUNG SLIDE 4 ĐẾN SLIDE 7 (BROCHURE) ================= */
+    const FULL_BENEFIT_SECTIONS = {
+      1: {
+        id: 1,
+        title: "① AN TÂM TRỌN VẸN",
+        tag: "SLIDE 04, 05, 06, 07 • NGUYÊN VĂN BROCHURE",
+        bgClass: "bg-gradient-to-r from-red-600 to-rose-700",
+        iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`,
+        contentHtml: `
+          <!-- KHỐI ĐIỂM NỔI BẬT & ĐIỀU KIỆN THAM GIA (SLIDE 04 & 05) -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-pru-red shadow-sm">
+            <span class="text-[10px] font-black uppercase text-pru-red tracking-wider block">SLIDE 04 & 05 • TỔNG QUAN & ĐIỀU KIỆN THAM GIA</span>
+            <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">ĐIỂM NỔI BẬT CỦA SẢN PHẨM & AI CÓ THỂ THAM GIA PRU-ĐẦU TƯ VỮNG TIẾN</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              <!-- Điểm nổi bật Slide 04 -->
+              <div class="bg-white/90 p-4 rounded-xl border border-slate-200">
+                <span class="text-xs font-black text-slate-800 uppercase block mb-2">4 Điểm Nổi Bật:</span>
+                <ul class="text-xs space-y-2 text-slate-700">
+                  <li>• <b>AN TÂM TRỌN VẸN:</b> với quyền lợi bảo vệ lên đến 110% Số Tiền Bảo Hiểm (*) cộng với Giá Trị Tài Khoản Hợp Đồng.</li>
+                  <li>• <b>ĐẦU TƯ CÓ TRÁCH NHIỆM VÀ TIN CẬY:</b> thông qua 7 Quỹ liên kết đơn vị PRUlink giúp khách hàng và gia đình vững bước tiến xa.</li>
+                  <li>• <b>CƠ HỘI GIA TĂNG TÍCH LŨY TÀI SẢN HIỆU QUẢ:</b> với khoản thưởng kép hấp dẫn ngay từ Năm Hợp Đồng thứ 10.</li>
+                  <li>• <b>VẸN TOÀN TRÁCH NHIỆM YÊU THƯƠNG:</b> với đặc quyền chuyển giao giá trị tích lũy thông qua quyền tham gia Hợp Đồng Bảo Hiểm mới.</li>
+                </ul>
+              </div>
+
+              <!-- Điều kiện tham gia Slide 05 -->
+              <div class="bg-white/90 p-4 rounded-xl border border-slate-200">
+                <span class="text-xs font-black text-slate-800 uppercase block mb-2">Ai Có Thể Tham Gia PRU-Đầu Tư Vững Tiến:</span>
+                <div class="space-y-2.5 text-xs text-slate-700">
+                  <div class="flex items-start gap-2">
+                    <span class="text-base">👤</span>
+                    <div><b>Độ tuổi tham gia:</b> 30 ngày tuổi – 70 tuổi</div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="text-base">📅</span>
+                    <div><b>Thời hạn hợp đồng:</b> 100 trừ đi Tuổi tham gia</div>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="text-base">💳</span>
+                    <div><b>Thời hạn đóng phí:</b> Bằng thời hạn hợp đồng. Linh hoạt đóng phí từ Năm thứ 5 của hợp đồng (**)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ghi chú Slide 04 & 05 -->
+            <div class="mt-4 text-[11px] text-slate-600 bg-slate-100/80 p-3 rounded-xl border border-slate-200 space-y-1.5">
+              <p><b>(*)</b> Áp dụng cho Quyền lợi Tử vong hoặc Quyền lợi Thương Tật Toàn Bộ Vĩnh Viễn Không Do Ung Thư Tuyến Giáp (UTTG) Giai Đoạn Sớm là 100% Số Tiền Bảo Hiểm (STBH). Đối với Quyền lợi Thương Tật Toàn Bộ Vĩnh Viễn Do UTTG Giai Đoạn Sớm, Prudential sẽ chi trả 10% STBH, nhưng không vượt quá 100 triệu đồng.</p>
+              <p><b>Lưu ý:</b> Tất cả các đặc tính và quyền lợi Bảo hiểm của sản phẩm được liệt kê tại tài liệu này chỉ mang tính tóm lược và chỉ có giá trị tham khảo. Tất cả các quyền lợi và điều kiện tương ứng sẽ được thực hiện theo các quy định tại Quy Tắc và Điều Khoản sản phẩm PRU-Đầu Tư Vững Tiến.</p>
+              <p><b>(**)</b> Phí Bảo Hiểm Cơ Bản phải được đóng đầy đủ và đúng hạn trong thời hạn đóng phí bắt buộc là 4 năm. Thời hạn đóng phí bằng Thời Hạn Hợp Đồng, tuy nhiên Khách hàng có thể linh hoạt đóng phí (đóng toàn bộ, đóng một phần hoặc tạm ngưng) tùy theo nhu cầu kể từ Năm Hợp Đồng thứ 5 theo quy định trong Quy Tắc và Điều Khoản Sản Phẩm Bảo Hiểm PRU-Đầu Tư Vững Tiến hoặc đóng phí theo Thời hạn đóng phí dự kiến trong Tài liệu minh họa bán hàng (Thời hạn đóng phí dự kiến chỉ cho mục đích tham khảo). Việc đóng một phần/ tạm ngưng đóng phí trong thời gian dài có thể ảnh hưởng đến quyền lợi bảo hiểm và Hợp Đồng Bảo Hiểm có thể bị mất hiệu lực nếu Giá Trị Tài Khoản Hợp Đồng không đủ để trả Phí Rủi Ro và/ hoặc Phí Quản Lý Hợp Đồng. Khách hàng nên duy trì việc đóng phí đều đặn nhằm đảm bảo tính hiệu lực của Hợp Đồng, hướng đến việc đạt được các mục tiêu tài chính và cân nhắc đóng thêm Phí Bảo Hiểm Đóng Thêm để gia tăng giá trị tích lũy.</p>
+            </div>
+          </div>
+
+          <!-- CHI TIẾT QUYỀN LỢI BẢO HIỂM RỦI RO (SLIDE 06 & 07) -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-red-500 shadow-sm mt-6">
+            <span class="text-[10px] font-black uppercase text-pru-red tracking-wider block">SLIDE 06 & 07 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">① AN TÂM TRỌN VẸN</h4>
+            <p class="text-xs text-slate-700 font-semibold mt-1">với quyền lợi bảo vệ lên đến 110% Số Tiền Bảo Hiểm cộng với Giá Trị Tài Khoản Hợp Đồng, mang lại sự an tâm cho Khách Hàng và gia đình trước các rủi ro trong cuộc sống.</p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              <!-- 1. Quyền Lợi Bảo Hiểm Tử Vong -->
+              <div class="bg-white p-4 rounded-xl border border-red-200">
+                <span class="text-[10px] font-black uppercase text-pru-red bg-red-100 px-2 py-0.5 rounded">QUYỀN LỢI (1) (2)</span>
+                <h5 class="text-sm font-black text-slate-900 mt-1.5">Quyền Lợi Bảo Hiểm Tử Vong</h5>
+                <div class="mt-2 p-2.5 bg-red-50 rounded-lg text-center font-black text-xs text-red-950 border border-red-200">
+                  100% Số Tiền Bảo Hiểm + Giá Trị Tài Khoản Cơ Bản + Giá Trị Tài Khoản Đóng Thêm (nếu có)
+                </div>
+              </div>
+
+              <!-- 2. Quyền Lợi TTTBVV Không Do UTTG Giai Đoạn Sớm -->
+              <div class="bg-white p-4 rounded-xl border border-red-200">
+                <span class="text-[10px] font-black uppercase text-pru-red bg-red-100 px-2 py-0.5 rounded">QUYỀN LỢI (1) (3) (4)</span>
+                <h5 class="text-sm font-black text-slate-900 mt-1.5">Quyền Lợi Bảo Hiểm Thương Tật Toàn Bộ Vĩnh Viễn (TTTBVV) Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm</h5>
+                <div class="mt-2 p-2.5 bg-red-50 rounded-lg text-center font-black text-xs text-red-950 border border-red-200">
+                  100% Số Tiền Bảo Hiểm + Giá Trị Tài Khoản Cơ Bản + Giá Trị Tài Khoản Đóng Thêm (nếu có)
+                </div>
+              </div>
+
+              <!-- 3. Quyền Lợi TTTBVV Do UTTG Giai Đoạn Sớm -->
+              <div class="bg-white p-4 rounded-xl border border-amber-300 md:col-span-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <span class="text-[10px] font-black uppercase text-amber-800 bg-amber-100 px-2 py-0.5 rounded">QUYỀN LỢI (5) (6)</span>
+                  <span class="text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded">HỢP ĐỒNG BẢO HIỂM VẪN TIẾP TỤC HIỆU LỰC</span>
+                </div>
+                <h5 class="text-sm font-black text-slate-900 mt-1.5">Quyền Lợi Bảo Hiểm Thương Tật Toàn Bộ Vĩnh Viễn (TTTBVV) Do Ung Thư Tuyến Giáp Giai Đoạn Sớm</h5>
+                <div class="mt-2 p-3 bg-amber-50 rounded-lg text-center font-black text-xs sm:text-sm text-amber-900 border border-amber-200">
+                  Chi trả một lần duy nhất số tiền nhỏ hơn giữa 10% Số Tiền Bảo Hiểm và 100 triệu đồng
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 3 CỘT MỐC QUAN TRỌNG TĂNG STBH KHÔNG THẨM ĐỊNH SỨC KHỎE (SLIDE 07) -->
+            <div class="mt-5 bg-white p-4 rounded-xl border border-slate-200">
+              <h5 class="text-xs font-black uppercase text-slate-900">
+                Tại các cột mốc quan trọng của cuộc sống, Bên Mua Bảo Hiểm được quyền chủ động tăng Số Tiền Bảo Hiểm mà không cần thẩm định sức khỏe để tăng cường bảo vệ:
+              </h5>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3 text-center text-xs">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col items-center justify-center">
+                  <span class="text-xl mb-1">💍</span>
+                  <span class="font-bold text-slate-800">Người Được Bảo Hiểm kết hôn</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col items-center justify-center">
+                  <span class="text-xl mb-1">👶</span>
+                  <span class="font-bold text-slate-800">hoặc Người Được Bảo Hiểm sinh con hoặc nhận con nuôi</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col items-center justify-center">
+                  <span class="text-xl mb-1">🎓</span>
+                  <span class="font-bold text-slate-800">hoặc Con của Người Được Bảo Hiểm bắt đầu vào học cấp 1, hoặc cấp 2, hoặc cấp 3, hoặc đại học</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CHÚ THÍCH NGUYÊN VĂN SLIDE 07: (1) ĐẾN (6) -->
+            <div class="mt-4 text-[11px] text-slate-600 bg-slate-100/90 p-4 rounded-xl border border-slate-200 space-y-1.5 leading-relaxed">
+              <p>Vui lòng xem chi tiết quyền lợi bảo hiểm, điều khoản loại trừ, điều kiện và giới hạn chi trả trong Quy tắc và Điều khoản sản phẩm PRU-Đầu Tư Vững Tiến.</p>
+              <p><b>(1)</b> Prudential sẽ chi trả Quyền lợi Bảo hiểm Tử Vong và Quyền Lợi Bảo Hiểm TTTBVV Không Do UTTG Giai Đoạn Sớm sau khi trừ đi các khoản rút tiền được thực hiện kể từ ngày có Sự Kiện Bảo Hiểm và (các) Khoản Nợ, nếu có.</p>
+              <p><b>(2)</b> Quyền Lợi Bảo Hiểm Tử Vong sẽ được tự động chuyển về Giá trị lớn hơn giữa 100% Số Tiền Bảo Hiểm và Giá Trị Tài Khoản Cơ Bản, sau đó cộng với Giá Trị Tài Khoản Đóng Thêm (nếu có) vào Ngày Kỷ Niệm Năm Hợp Đồng ngay sau sinh nhật lần thứ 71 của Người Được Bảo Hiểm (NĐBH). Hợp Đồng Bảo Hiểm sẽ chấm dứt hiệu lực sau khi Prudential chấp thuận chi trả quyền lợi này.</p>
+              <p><b>(3)</b> Quyền Lợi Bảo Hiểm TTTBVV sẽ chấm dứt vào Ngày Kỷ Niệm Năm Hợp Đồng ngay sau sinh nhật lần thứ 71 của Người Được Bảo Hiểm, nếu Hợp Đồng Bảo Hiểm còn hiệu lực.</p>
+              <p><b>(4)</b> Hợp Đồng Bảo Hiểm sẽ chấm dứt hiệu lực sau khi Prudential chấp thuận chi trả quyền lợi này.</p>
+              <p><b>(5)</b> Hợp Đồng Bảo Hiểm vẫn tiếp tục hiệu lực sau khi Prudential chấp thuận chi trả quyền lợi này.</p>
+              <p><b>(6)</b> Mức chi trả tối đa trên tất cả (các) Hợp Đồng Bảo Hiểm có cùng Quyền Lợi Bảo Hiểm TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm, áp dụng cho cùng một Người Được Bảo Hiểm: 100 triệu đồng hoặc nếu có bất kỳ Hợp Đồng Bảo Hiểm nào quy định mức chi trả cao hơn cho quyền lợi này, thì sẽ áp dụng mức cao nhất đó.</p>
+            </div>
+          </div>
+        `
+      },
+
+      2: {
+        id: 2,
+        title: "② ĐẦU TƯ CÓ TRÁCH NHIỆM VÀ TIN CẬY",
+        tag: "SLIDE 08, 09, 10 • NGUYÊN VĂN BROCHURE",
+        bgClass: "bg-gradient-to-r from-sky-600 to-blue-800",
+        iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>`,
+        contentHtml: `
+          <!-- NGUYÊN VĂN SLIDE 08 -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-sky-600 shadow-sm">
+            <span class="text-[10px] font-black uppercase text-sky-700 tracking-wider block">SLIDE 08 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">② ĐẦU TƯ CÓ TRÁCH NHIỆM VÀ TIN CẬY</h4>
+            <p class="text-xs text-slate-700 font-semibold mt-1">thông qua 7 Quỹ liên kết đơn vị PRUlink ("Quỹ PRUlink") giúp khách hàng và gia đình vững bước tiến xa</p>
+
+            <div class="mt-3 text-xs text-slate-700 space-y-2 leading-relaxed bg-white/90 p-4 rounded-xl border border-slate-200">
+              <p>• Bên Mua Bảo Hiểm có thể lựa chọn đầu tư vào một Quỹ hoặc kết hợp nhiều Quỹ PRUlink do Công ty TNHH Quản lý Quỹ Eastspring Investments ("Eastspring Việt Nam") quản lý, sao cho phù hợp với kỳ vọng lợi nhuận và khả năng chấp nhận rủi ro của mình.</p>
+              <p>• Bên Mua Bảo Hiểm được hưởng toàn bộ kết quả đầu tư và sẽ chịu toàn bộ rủi ro đầu tư tương ứng với Giá Trị Tài Khoản Hợp Đồng từ các Quỹ PRUlink đã chọn.</p>
+              <p>• Eastspring Investments, thuộc Prudential plc, là tập đoàn quản lý tài sản toàn cầu tập trung tại Châu Á, cung cấp các giải pháp đầu tư nhằm đáp ứng nhu cầu tài chính đa dạng của khách hàng.</p>
+              <p>• Eastspring Việt Nam được thành lập từ năm 2005 và hiện đang là công ty quản lý quỹ lớn nhất thị trường Việt Nam tính theo tổng giá trị tài sản quản lý.</p>
+              <p>• Eastspring Việt Nam hiện đang quản lý tổng tài sản trên <b>175,7 nghìn tỷ đồng (tương đương 6,6 tỷ USD)</b>, tính đến ngày 31/03/2026. Với đội ngũ chuyên gia giàu kinh nghiệm cùng chiến lược đầu tư linh hoạt của Eastspring Việt Nam, các Quỹ PRUlink đạt được kết quả đầu tư hiệu quả trong thời gian vừa qua, giúp khách hàng an tâm khi đầu tư qua các Quỹ PRUlink.</p>
+              <p class="text-[11px] text-slate-500 italic mt-1">Nguồn: Website chính thức của Eastspring Việt Nam https://www.eastspring.com/vn</p>
+              <p class="text-[11px] text-slate-500">Lưu ý: Vui lòng tham khảo mục Thông tin chung trong tài liệu này để biết chi tiết về mục tiêu và chính sách đầu tư của các Quỹ.</p>
+            </div>
+          </div>
+
+          <!-- NGUYÊN VĂN SLIDE 10 (PHẦN ƯU ĐIỂM) -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-sky-500 shadow-sm mt-5">
+            <span class="text-[10px] font-black uppercase text-sky-700 tracking-wider block">SLIDE 10 • ƯU ĐIỂM KHI ĐẦU TƯ THÔNG QUA CÔNG TY QUẢN LÝ QUỸ</span>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+              <div class="bg-white p-3.5 rounded-xl border border-sky-100 flex flex-col justify-between">
+                <div class="text-2xl mb-1.5">🌐</div>
+                <p class="text-xs text-slate-700 font-bold">Quỹ đầu tư có thể giúp khách hàng đa dạng hoá danh mục đầu tư mà không cần vốn lớn</p>
+              </div>
+              <div class="bg-white p-3.5 rounded-xl border border-sky-100 flex flex-col justify-between">
+                <div class="text-2xl mb-1.5">⚡</div>
+                <p class="text-xs text-slate-700 font-bold">Quỹ đầu tư có khả năng nắm bắt thông tin thị trường chính xác và kịp thời</p>
+              </div>
+              <div class="bg-white p-3.5 rounded-xl border border-sky-100 flex flex-col justify-between">
+                <div class="text-2xl mb-1.5">📊</div>
+                <p class="text-xs text-slate-700 font-bold">Quỹ đầu tư quản lý chuyên nghiệp và cập nhật thông tin liên tục cho khách hàng</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- BẢNG NGUYÊN VĂN SLIDE 09: TỶ SUẤT ĐẦU TƯ THỰC TẾ CỦA CÁC QUỸ PRULINK -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-blue-600 shadow-sm mt-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <span class="text-[10px] font-black uppercase text-blue-700 tracking-wider block">SLIDE 09 • TỶ SUẤT ĐẦU TƯ THỰC TẾ CỦA CÁC QUỸ PRULINK</span>
+              <span class="text-[11px] text-slate-500 font-bold">(Nguồn: Eastspring Việt Nam)</span>
+            </div>
+            
+            <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-slate-100 text-slate-800 font-extrabold uppercase text-[11px] border-b border-slate-200">
+                  <tr>
+                    <th class="p-2.5">Tên Quỹ</th>
+                    <th class="p-2.5 text-center">2021</th>
+                    <th class="p-2.5 text-center">2022</th>
+                    <th class="p-2.5 text-center">2023</th>
+                    <th class="p-2.5 text-center">2024</th>
+                    <th class="p-2.5 text-center">2025</th>
+                    <th class="p-2.5 text-center bg-blue-50 text-blue-900">LNBQ 05 năm gần nhất (**)</th>
+                    <th class="p-2.5 text-center bg-blue-100 text-blue-950">LNBQ 10 năm gần nhất (***)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-semibold">
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold text-emerald-800">Quỹ PRUlink Tương Lai Xanh</td>
+                    <td class="p-2.5 text-center text-slate-400">-</td>
+                    <td class="p-2.5 text-center text-slate-400">-</td>
+                    <td class="p-2.5 text-center text-slate-400">-</td>
+                    <td class="p-2.5 text-center font-bold text-emerald-700">6,3% (*)</td>
+                    <td class="p-2.5 text-center font-bold text-emerald-700">11,4%</td>
+                    <td class="p-2.5 text-center bg-blue-50/50 text-slate-400">-</td>
+                    <td class="p-2.5 text-center bg-blue-100/50 text-slate-400">-</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold text-slate-900">Quỹ PRUlink Cổ Phiếu Việt Nam</td>
+                    <td class="p-2.5 text-center text-emerald-600 font-bold">40,0%</td>
+                    <td class="p-2.5 text-center text-red-500 font-bold">-23,8%</td>
+                    <td class="p-2.5 text-center text-emerald-600">13,5%</td>
+                    <td class="p-2.5 text-center text-emerald-600">17,9%</td>
+                    <td class="p-2.5 text-center text-emerald-600">10,0%</td>
+                    <td class="p-2.5 text-center bg-blue-50/50 font-black text-blue-800">10,7%</td>
+                    <td class="p-2.5 text-center bg-blue-100/50 font-black text-blue-950">13,1%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold text-slate-900">Quỹ PRUlink Tăng Trưởng</td>
+                    <td class="p-2.5 text-center text-emerald-600 font-bold">28,5%</td>
+                    <td class="p-2.5 text-center text-red-500 font-bold">-17,6%</td>
+                    <td class="p-2.5 text-center text-emerald-600">16,8%</td>
+                    <td class="p-2.5 text-center text-emerald-600">16,5%</td>
+                    <td class="p-2.5 text-center text-emerald-600">9,4%</td>
+                    <td class="p-2.5 text-center bg-blue-50/50 font-black text-blue-800">9,4%</td>
+                    <td class="p-2.5 text-center bg-blue-100/50 font-black text-blue-950">11,9%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold text-slate-900">Quỹ PRUlink Cân Bằng</td>
+                    <td class="p-2.5 text-center text-emerald-600">20,8%</td>
+                    <td class="p-2.5 text-center text-red-500">-13,3%</td>
+                    <td class="p-2.5 text-center text-emerald-600">13,7%</td>
+                    <td class="p-2.5 text-center text-emerald-600">12,7%</td>
+                    <td class="p-2.5 text-center text-emerald-600">8,3%</td>
+                    <td class="p-2.5 text-center bg-blue-50/50 font-black text-blue-800">8,3%</td>
+                    <td class="p-2.5 text-center bg-blue-100/50 font-black text-blue-950">10,7%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold text-slate-900">Quỹ PRUlink Bền Vững</td>
+                    <td class="p-2.5 text-center text-emerald-600">13,3%</td>
+                    <td class="p-2.5 text-center text-red-500">-8,9%</td>
+                    <td class="p-2.5 text-center text-emerald-600">18,1%</td>
+                    <td class="p-2.5 text-center text-emerald-600">7,4%</td>
+                    <td class="p-2.5 text-center text-emerald-600">7,3%</td>
+                    <td class="p-2.5 text-center bg-blue-50/50 font-black text-blue-800">7,0%</td>
+                    <td class="p-2.5 text-center bg-blue-100/50 font-black text-blue-950">9,3%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold text-slate-900">Quỹ PRUlink Trái Phiếu Việt Nam</td>
+                    <td class="p-2.5 text-center text-red-500">-2,0%</td>
+                    <td class="p-2.5 text-center text-emerald-600">3,0%</td>
+                    <td class="p-2.5 text-center text-emerald-600 font-bold">20,2%</td>
+                    <td class="p-2.5 text-center text-emerald-600">2,8%</td>
+                    <td class="p-2.5 text-center text-emerald-600">3,5%</td>
+                    <td class="p-2.5 text-center bg-blue-50/50 font-black text-blue-800">5,2%</td>
+                    <td class="p-2.5 text-center bg-blue-100/50 font-black text-blue-950">7,2%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold text-slate-900">Quỹ PRUlink Bảo Toàn</td>
+                    <td class="p-2.5 text-center text-emerald-600">4,2%</td>
+                    <td class="p-2.5 text-center text-emerald-600">4,8%</td>
+                    <td class="p-2.5 text-center text-emerald-600">6,7%</td>
+                    <td class="p-2.5 text-center text-emerald-600">4,2%</td>
+                    <td class="p-2.5 text-center text-emerald-600">4,5%</td>
+                    <td class="p-2.5 text-center bg-blue-50/50 font-black text-blue-800">4,9%</td>
+                    <td class="p-2.5 text-center bg-blue-100/50 font-black text-blue-950">4,8%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- CHÚ THÍCH NGUYÊN VĂN SLIDE 09 -->
+            <div class="mt-3 text-[11px] text-slate-600 bg-slate-100/90 p-4 rounded-xl border border-slate-200 space-y-1.5 leading-relaxed">
+              <p><b>(*)</b> Quỹ PRUlink Tương Lai Xanh được thành lập vào ngày 08/03/2024, có tỷ suất lợi nhuận từ ngày thành lập đến ngày 31/12/2024 là 6,3%.</p>
+              <p><b>(**)</b> Là lợi nhuận bình quân 5 năm trong giai đoạn 2021-2025 của các Quỹ PRUlink.</p>
+              <p><b>(***)</b> Là lợi nhuận bình quân 10 năm trong giai đoạn 2016-2025 của các Quỹ PRUlink. Chi tiết tỷ suất đầu tư thực tế từng năm vui lòng tham khảo Báo cáo thường niên Quỹ Liên Kết Đơn Vị năm 2025 tại www.prudential.com.vn</p>
+              <p class="font-bold text-slate-800">Kết quả hoạt động của các Quỹ PRUlink trong quá khứ chỉ dùng để tham khảo và không phải là cơ sở đảm bảo chắc chắn về kết quả hoạt động của các Quỹ PRUlink trong tương lai. Tỷ suất đầu tư thực tế có thể thay đổi (tăng hoặc giảm hoặc thậm chí cho kết quả âm) qua các năm tùy vào kết quả đầu tư thực tế và tình hình thị trường.</p>
+            </div>
+          </div>
+        `
+      },
+
+      3: {
+        id: 3,
+        title: "③ CƠ HỘI GIA TĂNG TÍCH LŨY TÀI SẢN HIỆU QUẢ",
+        tag: "SLIDE 10 & 11 • NGUYÊN VĂN BROCHURE",
+        bgClass: "bg-gradient-to-r from-amber-500 to-orange-600",
+        iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+        contentHtml: `
+          <!-- NGUYÊN VĂN SLIDE 10 & 11: TIÊU ĐỀ & KHOẢN THƯỞNG KÉP -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-amber-500 shadow-sm">
+            <span class="text-[10px] font-black uppercase text-amber-800 tracking-wider block">SLIDE 10 & 11 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">③ CƠ HỘI GIA TĂNG TÍCH LŨY TÀI SẢN HIỆU QUẢ</h4>
+            <p class="text-xs text-slate-700 font-semibold mt-1">với khoản thưởng kép hấp dẫn ngay từ Năm Hợp Đồng thứ 10</p>
+          </div>
+
+          <!-- BẢNG A: QUYỀN LỢI THƯỞNG TĂNG TRƯỞNG (SLIDE 11) -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-amber-500 shadow-sm mt-5">
+            <h5 class="text-sm font-black text-slate-900">
+              A. QUYỀN LỢI THƯỞNG TĂNG TRƯỞNG (8)
+            </h5>
+            <p class="text-xs text-slate-700 mt-1">
+              Các khoản thưởng lên đến <b>300% Phí Bảo Hiểm Cơ Bản của Năm Hợp Đồng đầu tiên</b> giúp gia tăng tiềm năng đầu tư, được chi trả như sau:
+            </p>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white mt-3">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-amber-100/70 text-amber-950 font-extrabold uppercase text-[11px] border-b border-amber-200">
+                  <tr>
+                    <th class="p-3">Quyền lợi</th>
+                    <th class="p-3 text-center">Ngày Kỷ Niệm Năm Hợp Đồng thứ 10</th>
+                    <th class="p-3 text-center">Ngày Kỷ Niệm Năm Hợp Đồng thứ 15</th>
+                    <th class="p-3 text-center">Ngày Kỷ Niệm Năm Hợp Đồng thứ 20</th>
+                  </tr>
+                </thead>
+                <tbody class="font-bold text-slate-800">
+                  <tr>
+                    <td class="p-3 font-black text-amber-900 bg-amber-50/50">Thưởng Tăng Trưởng</td>
+                    <td class="p-3 text-center bg-white border-l border-slate-100">
+                      <span class="text-base font-black text-amber-600 block">150%</span>
+                      <span class="text-[10px] text-slate-500 font-medium block">Phí Bảo Hiểm Cơ Bản quy năm của Năm Hợp Đồng đầu tiên</span>
+                    </td>
+                    <td class="p-3 text-center bg-white border-l border-slate-100">
+                      <span class="text-base font-black text-amber-600 block">75%</span>
+                      <span class="text-[10px] text-slate-500 font-medium block">Phí Bảo Hiểm Cơ Bản quy năm của Năm Hợp Đồng đầu tiên</span>
+                    </td>
+                    <td class="p-3 text-center bg-white border-l border-slate-100">
+                      <span class="text-base font-black text-amber-600 block">75%</span>
+                      <span class="text-[10px] text-slate-500 font-medium block">Phí Bảo Hiểm Cơ Bản quy năm của Năm Hợp Đồng đầu tiên</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- BẢNG B: QUYỀN LỢI THƯỞNG GẮN KẾT (SLIDE 11) -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-orange-500 shadow-sm mt-5">
+            <h5 class="text-sm font-black text-slate-900">
+              B. QUYỀN LỢI THƯỞNG GẮN KẾT (8)
+            </h5>
+            <p class="text-xs text-slate-700 mt-1">
+              Các khoản thưởng tương ứng với tỉ lệ % của <b>tổng Phí Rủi Ro đã khấu trừ</b> nhằm tối ưu hóa kết quả đầu tư, được chi trả như sau:
+            </p>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white mt-3">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-orange-100/70 text-orange-950 font-extrabold uppercase text-[11px] border-b border-orange-200">
+                  <tr>
+                    <th class="p-3">Quyền lợi</th>
+                    <th class="p-3 text-center">Ngày Kỷ Niệm Năm Hợp Đồng thứ 10</th>
+                    <th class="p-3 text-center">Ngày Kỷ Niệm Năm Hợp Đồng thứ 15</th>
+                    <th class="p-3 text-center">Ngày Kỷ Niệm Năm Hợp Đồng thứ 20</th>
+                  </tr>
+                </thead>
+                <tbody class="font-bold text-slate-800">
+                  <tr>
+                    <td class="p-3 font-black text-orange-900 bg-orange-50/50">Thưởng Gắn Kết</td>
+                    <td class="p-3 text-center bg-white border-l border-slate-100">
+                      <span class="text-base font-black text-orange-600 block">50%</span>
+                      <span class="text-[10px] text-slate-500 font-medium block">tổng Phí Rủi Ro đã khấu trừ trong 10 Năm Hợp Đồng đầu tiên</span>
+                    </td>
+                    <td class="p-3 text-center bg-white border-l border-slate-100">
+                      <span class="text-base font-black text-orange-600 block">25%</span>
+                      <span class="text-[10px] text-slate-500 font-medium block">tổng Phí Rủi Ro đã khấu trừ từ Năm Hợp Đồng thứ 11 đến Năm Hợp Đồng thứ 15</span>
+                    </td>
+                    <td class="p-3 text-center bg-white border-l border-slate-100">
+                      <span class="text-base font-black text-orange-600 block">25%</span>
+                      <span class="text-[10px] text-slate-500 font-medium block">tổng Phí Rủi Ro đã khấu trừ từ Năm Hợp Đồng thứ 16 đến Năm Hợp Đồng thứ 20</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- QUYỀN LỢI ĐÁO HẠN HỢP ĐỒNG (SLIDE 11) -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-emerald-600 shadow-sm mt-5">
+            <span class="text-[10px] font-black uppercase text-emerald-800 tracking-wider block">SLIDE 11 • KẾT THÚC THỜI HẠN BẢO HIỂM</span>
+            <h5 class="text-sm sm:text-base font-black text-slate-900 mt-1">QUYỀN LỢI ĐÁO HẠN HỢP ĐỒNG</h5>
+            <div class="mt-2 p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center font-black text-sm text-emerald-950">
+              100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng
+            </div>
+          </div>
+
+          <!-- CHÚ THÍCH NGUYÊN VĂN SLIDE 11: (8) & LƯU Ý -->
+          <div class="mt-4 text-[11px] text-slate-600 bg-slate-100/90 p-4 rounded-xl border border-slate-200 space-y-1.5 leading-relaxed">
+            <p><b>(8)</b> Quyền lợi Thưởng Tăng Trưởng và Quyền lợi Thưởng Gắn Kết sẽ được phân bổ vào GTTKCB và được sử dụng để mua các Đơn Vị Quỹ theo Tỷ Lệ Đầu Tư đang có hiệu lực và theo Giá Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp ngay sau ngày Prudential chi trả quyền lợi này.</p>
+            <p><b>Lưu ý:</b> Điều kiện để được nhận Quyền lợi Thưởng Tăng Trưởng và Quyền lợi Thưởng Gắn Kết vui lòng tham khảo Quy Tắc và Điều Khoản của sản phẩm PRU-Đầu Tư Vững Tiến.</p>
+          </div>
+        `
+      },
+
+      4: {
+        id: 4,
+        title: "④ VẸN TOÀN TRÁCH NHIỆM YÊU THƯƠNG",
+        tag: "SLIDE 12 & 13 • NGUYÊN VĂN BROCHURE",
+        bgClass: "bg-gradient-to-r from-purple-700 to-indigo-800",
+        iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>`,
+        contentHtml: `
+          <!-- NGUYÊN VĂN SLIDE 12: ĐẶC QUYỀN CHUYỂN GIAO -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-purple-600 shadow-sm">
+            <span class="text-[10px] font-black uppercase text-purple-700 tracking-wider block">SLIDE 12 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">④ VẸN TOÀN TRÁCH NHIỆM YÊU THƯƠNG</h4>
+            <p class="text-xs text-slate-700 font-semibold mt-1">với đặc quyền chuyển giao giá trị tích lũy thông qua quyền tham gia Hợp Đồng Bảo Hiểm mới (9)</p>
+
+            <div class="mt-3 bg-white/90 p-4 rounded-xl border border-purple-200 text-xs text-slate-800 leading-relaxed">
+              BMBH có thể thực hiện quyền chuyển giao giá trị tích lũy sang Hợp Đồng Bảo Hiểm mới có Người Được Bảo Hiểm mới, từ khi <b>NĐBH hiện tại đạt 60 tuổi trở lên</b> hoặc từ <b>Ngày Kỷ Niệm Năm Hợp Đồng thứ 20</b>, tùy ngày nào đến sau.
+            </div>
+
+            <!-- MỘT SỐ ĐIỂM ƯU VIỆT CỦA HỢP ĐỒNG BẢO HIỂM MỚI (SLIDE 12) -->
+            <div class="mt-4">
+              <span class="text-xs font-black uppercase text-slate-900 block mb-2">MỘT SỐ ĐIỂM ƯU VIỆT CỦA HỢP ĐỒNG BẢO HIỂM MỚI:</span>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="bg-white p-3.5 rounded-xl border border-purple-100 text-center">
+                  <span class="text-2xl block mb-1">💼</span>
+                  <p class="text-xs font-bold text-slate-800">Toàn bộ Giá Trị Tài Khoản Hợp Đồng sẽ được chuyển giao sang Hợp Đồng Bảo Hiểm mới</p>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-purple-100 text-center">
+                  <span class="text-2xl block mb-1">⏳</span>
+                  <p class="text-xs font-bold text-slate-800">Không áp dụng Thời hạn đóng phí bắt buộc</p>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-purple-100 text-center">
+                  <span class="text-2xl block mb-1">🎁</span>
+                  <p class="text-xs font-bold text-slate-800">Không áp dụng Phí Ban Đầu</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NGUYÊN VĂN SLIDE 13: CÁC QUYỀN CỦA BÊN MUA BẢO HIỂM -->
+          <div class="surface-3d p-5 rounded-2xl border-l-4 border-indigo-600 shadow-sm mt-5">
+            <span class="text-[10px] font-black uppercase text-indigo-700 tracking-wider block">SLIDE 13 • LINH HOẠT TÀI CHÍNH</span>
+            <h5 class="text-sm sm:text-base font-black text-slate-900 mt-1">CÁC QUYỀN CỦA BÊN MUA BẢO HIỂM</h5>
+            <p class="text-xs text-slate-700 font-semibold mt-1">Chủ động thực hiện các quyền linh hoạt giúp Khách hàng hoạch định các mục tiêu bảo vệ và gia tăng tài sản theo nhu cầu tài chính:</p>
+
+            <div class="mt-3 space-y-2.5 text-xs text-slate-700 bg-white/90 p-4 rounded-xl border border-slate-200 leading-relaxed">
+              <p>• Toàn quyền thay đổi STBH theo nhu cầu bảo vệ tại từng giai đoạn cuộc sống. (10)</p>
+              <p>• Chủ động gia tăng GTTKĐT với khoản đầu tư thêm tối đa vào mỗi Năm Hợp Đồng bằng 5 lần Phí Bảo Hiểm Cơ Bản quy năm của Năm Hợp Đồng hiện tại.</p>
+              <p>• Chủ động chuyển đổi Quỹ (11); thay đổi Tỷ Lệ Đầu Tư vào 7 Quỹ PRUlink để kịp thời nắm bắt các cơ hội của thị trường mà không tốn phí.</p>
+              <p>• Chủ động lựa chọn đóng phí linh hoạt từ Năm Hợp Đồng thứ 5.</p>
+              <p>• Rút tiền từ Giá Trị Tài Khoản Hợp Đồng (12) hoàn toàn không tốn phí nhằm đáp ứng các nhu cầu tài chính.</p>
+              <p>• Chủ động tham gia thêm các Sản Phẩm Bảo Hiểm Bán Cùng để gia tăng bảo vệ theo nhu cầu.</p>
+            </div>
+          </div>
+
+          <!-- CHÚ THÍCH NGUYÊN VĂN (9) ĐẾN (12) & GIẢI THÍCH TỪ NGỮ (SLIDE 13) -->
+          <div class="mt-4 text-[11px] text-slate-600 bg-slate-100/90 p-4 rounded-xl border border-slate-200 space-y-2 leading-relaxed">
+            <div>
+              <p><b>(9)</b> Vui lòng xem chi tiết quyền và điều kiện thực hiện quyền tại Quy Tắc và Điều Khoản sản phẩm PRU-Đầu Tư Vững Tiến.</p>
+              <p><b>(10)</b> BMBH có thể thực hiện thay đổi STBH từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 2.</p>
+              <p><b>(11)</b> BMBH được thực hiện sau Thời Gian Cân Nhắc.</p>
+              <p><b>(12)</b> BMBH có thể yêu cầu rút tiền từ GTTKCB kể từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 3 trở đi. BMBH có thể yêu cầu rút tiền từ GTTKĐT bất kỳ lúc nào sau Thời Gian Cân Nhắc.</p>
+            </div>
+            
+            <div class="border-t border-slate-200 pt-2 text-slate-800">
+              <span class="font-black text-xs uppercase block mb-1">Giải thích từ ngữ:</span>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 font-medium">
+                <div><b>NĐBH:</b> Người Được Bảo Hiểm</div>
+                <div><b>GTTKCB:</b> Giá Trị Tài Khoản Cơ Bản</div>
+                <div><b>STBH:</b> Số Tiền Bảo Hiểm</div>
+                <div><b>BMBH:</b> Bên Mua Bảo Hiểm</div>
+                <div><b>GTTKĐT:</b> Giá Trị Tài Khoản Đóng Thêm</div>
+              </div>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    /* ================= 4. MINI QUIZZES RIÊNG TỪNG PHẦN ================= */
+    const MINI_QUIZ_TEMPLATES = {
+      1: `
+        <div class="bg-red-50 p-5 rounded-2xl border border-red-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-black uppercase text-pru-red bg-red-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 1</span>
+            <span class="text-xs font-bold text-slate-500">Bảo Hiểm Rủi Ro & Điều Kiện Tham Gia</span>
+          </div>
+          <h4 class="text-base font-black text-slate-900 mt-2">Kiểm Tra Kiến Thức Phần 1 (Slide 04 - 07)</h4>
+
+          <div class="mt-4 space-y-4">
+            <!-- Q1.1 -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <span class="text-xs font-extrabold text-slate-800 block mb-2">Câu 1: Độ tuổi tham gia PRU-Đầu Tư Vững Tiến theo quy định tại Slide 05 là bao nhiêu?</span>
+              <div class="space-y-2 text-xs">
+                <button onclick="answerMiniQuiz(1, 1, 0, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
+                  A. 18 tuổi đến 60 tuổi
+                </button>
+                <button onclick="answerMiniQuiz(1, 1, 1, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
+                  B. 30 ngày tuổi – 70 tuổi
+                </button>
+                <button onclick="answerMiniQuiz(1, 1, 2, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
+                  C. 0 ngày tuổi đến 65 tuổi
+                </button>
+              </div>
+              <div id="mq1_1_feedback" class="mt-2 text-xs font-bold hidden"></div>
+            </div>
+
+            <!-- Q1.2 -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <span class="text-xs font-extrabold text-slate-800 block mb-2">Câu 2: Với Quyền Lợi Bảo Hiểm TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm (chú thích 5, 6), Prudential chi trả thế nào?</span>
+              <div class="space-y-2 text-xs">
+                <button onclick="answerMiniQuiz(1, 2, 0, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
+                  A. Chi trả 100% STBH và chấm dứt HĐBH
+                </button>
+                <button onclick="answerMiniQuiz(1, 2, 1, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
+                  B. Chi trả một lần duy nhất số tiền nhỏ hơn giữa 10% STBH và 100 triệu đồng; HĐBH vẫn tiếp tục hiệu lực
+                </button>
+              </div>
+              <div id="mq1_2_feedback" class="mt-2 text-xs font-bold hidden"></div>
+            </div>
+          </div>
+        </div>
+      `,
+
+      2: `
+        <div class="bg-sky-50 p-5 rounded-2xl border border-sky-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-black uppercase text-sky-800 bg-sky-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 2</span>
+            <span class="text-xs font-bold text-slate-500">7 Quỹ PRUlink & Lợi Nhuận Bình Quân</span>
+          </div>
+          <h4 class="text-base font-black text-slate-900 mt-2">Nối Cặp Tỷ Suất Sinh Lời Bình Quân 10 Năm (2016-2025)</h4>
+          <p class="text-xs text-slate-600 mt-1">Chọn Quỹ ở Cột Trái rồi chọn LNBQ 10 năm tương ứng ở Cột Phải (theo đúng bảng Slide 09).</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-xs font-bold">
+            <div class="space-y-2" id="mqFundColLeft">
+              <div data-id="cp" onclick="selectFundPair('L', 'cp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
+                📈 Quỹ PRUlink Cổ Phiếu Việt Nam
+              </div>
+              <div data-id="tp" onclick="selectFundPair('L', 'tp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
+                🏛️ Quỹ PRUlink Trái Phiếu Việt Nam
+              </div>
+            </div>
+
+            <div class="space-y-2" id="mqFundColRight">
+              <div data-id="tp" onclick="selectFundPair('R', 'tp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
+                LNBQ 10 năm gần nhất: 7,2%
+              </div>
+              <div data-id="cp" onclick="selectFundPair('R', 'cp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
+                LNBQ 10 năm gần nhất: 13,1%
+              </div>
+            </div>
+          </div>
+          <div id="mqFundFeedback" class="mt-3 text-center text-xs font-bold text-slate-600">Đã ghép đúng: <span id="mqFundCount">0</span>/2 cặp</div>
+        </div>
+      `,
+
+      3: `
+        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-black uppercase text-amber-900 bg-amber-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 3</span>
+            <span class="text-xs font-bold text-slate-500">Mốc Thưởng Kép & Đáo Hạn</span>
+          </div>
+          <h4 class="text-base font-black text-slate-900 mt-2">Thử Thách: Tỷ Lệ Thưởng Tăng Trưởng & Thưởng Gắn Kết (Slide 11)</h4>
+
+          <div class="mt-4 space-y-3 text-xs">
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <span class="font-extrabold text-slate-800 block mb-1">Quyền lợi Thưởng Tăng Trưởng vào Ngày Kỷ Niệm Năm HĐ thứ 10 là bao nhiêu?</span>
+              <div class="grid grid-cols-3 gap-2 mt-2">
+                <button onclick="answerMiniQuiz(3, 1, '50%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">50%</button>
+                <button onclick="answerMiniQuiz(3, 1, '100%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">100%</button>
+                <button onclick="answerMiniQuiz(3, 1, '150%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">150% Phí Cơ Bản năm đầu</button>
+              </div>
+              <div id="mq3_1_feedback" class="mt-2 text-xs font-bold hidden"></div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <span class="font-extrabold text-slate-800 block mb-1">Khi Đáo Hạn Hợp Đồng, Quyền lợi khách hàng nhận được là gì?</span>
+              <div class="grid grid-cols-2 gap-2 mt-2">
+                <button onclick="answerMiniQuiz(3, 2, '100%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">100% GTTKHĐ tại Ngày Định Giá Kế Tiếp</button>
+                <button onclick="answerMiniQuiz(3, 2, '80%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">80% Số Tiền Bảo Hiểm</button>
+              </div>
+              <div id="mq3_2_feedback" class="mt-2 text-xs font-bold hidden"></div>
+            </div>
+          </div>
+        </div>
+      `,
+
+      4: `
+        <div class="bg-purple-50 p-5 rounded-2xl border border-purple-200">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-black uppercase text-purple-900 bg-purple-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 4</span>
+            <span class="text-xs font-bold text-slate-500">Đặc Quyền Chuyển Giao & Quyền BMBH</span>
+          </div>
+          <h4 class="text-base font-black text-slate-900 mt-2">Kiểm Tra: Đúng/Sai Về Quyền BMBH & Hợp Đồng Mới (Slide 12 & 13)</h4>
+
+          <div class="mt-4 space-y-3 text-xs">
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <span class="font-bold text-slate-800">1. Hợp đồng bảo hiểm mới nhận chuyển giao KHÔNG áp dụng Thời hạn đóng phí bắt buộc và KHÔNG áp dụng Phí Ban Đầu.</span>
+              <div class="flex gap-2 shrink-0">
+                <button onclick="answerTF(1, true, this)" class="px-3 py-1 rounded border font-bold">Đúng</button>
+                <button onclick="answerTF(1, false, this)" class="px-3 py-1 rounded border font-bold">Sai</button>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <span class="font-bold text-slate-800">2. BMBH có thể yêu cầu rút tiền từ GTTKCB kể từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 3 trở đi hoàn toàn không tốn phí.</span>
+              <div class="flex gap-2 shrink-0">
+                <button onclick="answerTF(2, true, this)" class="px-3 py-1 rounded border font-bold">Đúng</button>
+                <button onclick="answerTF(2, false, this)" class="px-3 py-1 rounded border font-bold">Sai</button>
+              </div>
+            </div>
+          </div>
+          <div id="mq4_feedback" class="mt-3 text-center text-xs font-bold text-slate-600"></div>
+        </div>
+      `
+    };
+
+    /* ================= 5. MODAL CONTROL LOGIC ================= */
+    let currentModalSectionId = 1;
+
+    function openInfographicModal(sectionId) {
+      playSoundEffect('swipe');
+      currentModalSectionId = sectionId;
+      const data = FULL_BENEFIT_SECTIONS[sectionId];
+      if (!data) return;
+
+      const modal = document.getElementById('infographicModal');
+      document.getElementById('modalHeaderBg').className = `px-6 py-5 sm:px-8 border-b border-white/10 flex items-center justify-between text-white ${data.bgClass}`;
+      document.getElementById('modalHeaderIcon').innerHTML = data.iconSvg;
+      document.getElementById('modalHeaderTitle').innerText = data.title;
+      document.getElementById('modalHeaderTag').innerText = data.tag;
+      document.getElementById('infographicBody').innerHTML = data.contentHtml;
+      document.getElementById('miniQuizBody').innerHTML = MINI_QUIZ_TEMPLATES[sectionId];
+
+      switchInfographicTab('theory');
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      selectedFundA = null;
+      selectedFundB = null;
+      matchedFundCount = 0;
+    }
+
+    function closeInfographicModal() {
+      playSoundEffect('swipe');
+      const modal = document.getElementById('infographicModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+
+    function switchInfographicTab(tab) {
+      playSoundEffect('swipe');
+      const tabTheory = document.getElementById('infographicBody');
+      const tabQuiz = document.getElementById('miniQuizBody');
+      const btnTheory = document.getElementById('modalTabTheoryBtn');
+      const btnQuiz = document.getElementById('modalTabQuizBtn');
+      const toggleBtn = document.getElementById('toggleTabBtn');
+
+      if (tab === 'theory') {
+        tabTheory.classList.remove('hidden');
+        tabQuiz.classList.add('hidden');
+        btnTheory.classList.add('border-pru-red', 'text-pru-red');
+        btnTheory.classList.remove('border-transparent', 'text-slate-500');
+        btnQuiz.classList.remove('border-pru-red', 'text-pru-red');
+        btnQuiz.classList.add('border-transparent', 'text-slate-500');
+        toggleBtn.innerHTML = "<span>Làm Bài Ôn Tập 🎯</span>";
+      } else {
+        tabTheory.classList.add('hidden');
+        tabQuiz.classList.remove('hidden');
+        btnQuiz.classList.add('border-pru-red', 'text-pru-red');
+        btnQuiz.classList.remove('border-transparent', 'text-slate-500');
+        btnTheory.classList.remove('border-pru-red', 'text-pru-red');
+        btnTheory.classList.add('border-transparent', 'text-slate-500');
+        toggleBtn.innerHTML = "<span>Xem Toàn Bộ Nội Dung 📑</span>";
+      }
+    }
+
+    function toggleModalTabAction() {
+      const isTheory = !document.getElementById('infographicBody').classList.contains('hidden');
+      switchInfographicTab(isTheory ? 'quiz' : 'theory');
+    }
+
+    // Mini Quiz Event Handlers
+    function answerMiniQuiz(section, qIndex, selectedVal, btn) {
+      if (section === 1) {
+        if (qIndex === 1) {
+          const fb = document.getElementById('mq1_1_feedback');
+          fb.classList.remove('hidden');
+          if (selectedVal === 1) {
+            playSoundEffect('correct');
+            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 font-bold text-emerald-800";
+            fb.innerHTML = "<span class='text-emerald-700'>✓ Hoàn toàn chính xác! 30 ngày tuổi – 70 tuổi (Slide 05).</span>";
+          } else {
+            playSoundEffect('wrong');
+            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-red-500 bg-red-50 font-bold text-red-800";
+            fb.innerHTML = "<span class='text-red-600'>✗ Chưa chính xác. Vui lòng chọn lại.</span>";
+          }
+        } else if (qIndex === 2) {
+          const fb = document.getElementById('mq1_2_feedback');
+          fb.classList.remove('hidden');
+          if (selectedVal === 1) {
+            playSoundEffect('correct');
+            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 font-bold text-emerald-800";
+            fb.innerHTML = "<span class='text-emerald-700'>✓ Chính xác! Chi trả số nhỏ hơn giữa 10% STBH và 100tr, HĐ vẫn tiếp tục hiệu lực.</span>";
+            triggerConfettiSmall();
+          } else {
+            playSoundEffect('wrong');
+            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-red-500 bg-red-50 font-bold text-red-800";
+            fb.innerHTML = "<span class='text-red-600'>✗ Chưa chính xác.</span>";
+          }
+        }
+      } else if (section === 3) {
+        if (qIndex === 1) {
+          const fb = document.getElementById('mq3_1_feedback');
+          fb.classList.remove('hidden');
+          if (selectedVal === '150% Phí Cơ Bản năm đầu') {
+            playSoundEffect('correct');
+            btn.className = "p-2 rounded border-2 border-emerald-500 bg-emerald-50 font-black text-emerald-800";
+            fb.innerHTML = "<span class='text-emerald-700'>✓ Chính xác! Năm thứ 10 là 150% Phí Cơ Bản năm đầu (Slide 11).</span>";
+          } else {
+            playSoundEffect('wrong');
+            btn.className = "p-2 rounded border-2 border-red-500 bg-red-50 font-black text-red-800";
+          }
+        } else if (qIndex === 2) {
+          const fb = document.getElementById('mq3_2_feedback');
+          fb.classList.remove('hidden');
+          if (selectedVal === '100%') {
+            playSoundEffect('correct');
+            btn.className = "p-2 rounded border-2 border-emerald-500 bg-emerald-50 font-black text-emerald-800";
+            fb.innerHTML = "<span class='text-emerald-700'>✓ Chính xác! 100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp.</span>";
+            triggerConfettiSmall();
+          } else {
+            playSoundEffect('wrong');
+            btn.className = "p-2 rounded border-2 border-red-500 bg-red-50 font-black text-red-800";
+          }
+        }
+      }
+    }
+
+    // Mini Fund Matching Section 2
+    let selectedFundA = null, selectedFundB = null, matchedFundCount = 0;
+    function selectFundPair(col, fundId, el) {
+      playSoundEffect('swipe');
+      if (col === 'L') {
+        document.querySelectorAll('#mqFundColLeft > div').forEach(d => d.classList.remove('border-sky-500', 'bg-sky-50'));
+        el.classList.add('border-sky-500', 'bg-sky-50');
+        selectedFundA = { id: fundId, el };
+      } else {
+        document.querySelectorAll('#mqFundColRight > div').forEach(d => d.classList.remove('border-sky-500', 'bg-sky-50'));
+        el.classList.add('border-sky-500', 'bg-sky-50');
+        selectedFundB = { id: fundId, el };
+      }
+
+      if (selectedFundA && selectedFundB) {
+        if (selectedFundA.id === selectedFundB.id) {
+          playSoundEffect('correct');
+          selectedFundA.el.className = "p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 text-emerald-900 pointer-events-none";
+          selectedFundB.el.className = "p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 text-emerald-900 pointer-events-none";
+          matchedFundCount++;
+          document.getElementById('mqFundCount').innerText = matchedFundCount;
+          selectedFundA = null;
+          selectedFundB = null;
+
+          if (matchedFundCount === 2) {
+            playSoundEffect('fanfare');
+            triggerConfettiSmall();
+          }
+        } else {
+          playSoundEffect('wrong');
+          const eA = selectedFundA.el;
+          const eB = selectedFundB.el;
+          eA.classList.add('border-red-500', 'bg-red-50');
+          eB.classList.add('border-red-500', 'bg-red-50');
+          setTimeout(() => {
+            eA.classList.remove('border-red-500', 'bg-red-50', 'border-sky-500', 'bg-sky-50');
+            eB.classList.remove('border-red-500', 'bg-red-50', 'border-sky-500', 'bg-sky-50');
+          }, 600);
+          selectedFundA = null;
+          selectedFundB = null;
+        }
+      }
+    }
+
+    // Mini True/False Section 4
+    function answerTF(qIdx, val, btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('button').forEach(b => b.className = "px-3 py-1 rounded border font-bold");
+      if (val === true) {
+        playSoundEffect('correct');
+        btn.className = "px-3 py-1 rounded border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-black";
+        document.getElementById('mq4_feedback').innerHTML = "<span class='text-emerald-700'>✓ Hoàn toàn chính xác theo nguyên văn Slide 12 & 13!</span>";
+        triggerConfettiSmall();
+      } else {
+        playSoundEffect('wrong');
+        btn.className = "px-3 py-1 rounded border-2 border-red-500 bg-red-50 text-red-800 font-black";
+        document.getElementById('mq4_feedback').innerHTML = "<span class='text-red-600'>✗ Nhận định này là ĐÚNG theo quy tắc sản phẩm.</span>";
+      }
+    }
+
+    /* ================= 6. GRAND REVIEW GAME (8 ẢI NGUYÊN VĂN SLIDE 4 - 7) ================= */
+    const GRAND_QUESTIONS = [
+      {
+        cat: "SLIDE 04 & 05: ĐIỀU KIỆN THAM GIA",
+        q: "Theo Slide 05, thời hạn đóng phí bắt buộc của sản phẩm PRU-Đầu Tư Vững Tiến là bao nhiêu năm?",
+        options: [
+          "A. 1 năm đầu tiên",
+          "B. 4 năm (BMBH có thể linh hoạt đóng phí từ Năm HĐ thứ 5)",
+          "C. Bắt buộc đóng đủ suốt thời hạn hợp đồng",
+          "D. 10 năm bắt buộc"
+        ],
+        correct: 1,
+        explain: "Chính xác! Phí Bảo Hiểm Cơ Bản phải được đóng đầy đủ và đúng hạn trong thời hạn đóng phí bắt buộc là 4 năm. Khách hàng có thể linh hoạt đóng phí từ Năm HĐ thứ 5 (Slide 05)."
+      },
+      {
+        cat: "SLIDE 06 & 07: QUYỀN LỢI RỦI RO",
+        q: "Công thức chi trả Quyền lợi Bảo hiểm Tử vong và Quyền lợi TTTBVV Không Do UTTG Giai Đoạn Sớm là gì?",
+        options: [
+          "A. 100% Số Tiền Bảo Hiểm + Giá Trị Tài Khoản Cơ Bản + Giá Trị Tài Khoản Đóng Thêm (nếu có)",
+          "B. 110% Số Tiền Bảo Hiểm trừ đi Phí Quản Lý Hợp Đồng",
+          "C. Chỉ nhận lại Giá Trị Tài Khoản Cơ Bản",
+          "D. Giá trị lớn hơn giữa 100% STBH và GTTKCB"
+        ],
+        correct: 0,
+        explain: "Chính xác! Chi trả 100% STBH + GTTKCB + GTTKĐT (nếu có) sau khi trừ đi các khoản rút tiền từ ngày có Sự Kiện Bảo Hiểm và nợ nếu có (Slide 06 & 07)."
+      },
+      {
+        cat: "SLIDE 07: CHUYỂN ĐỔI SAU TUỔI 71",
+        q: "Vào Ngày Kỷ Niệm Năm HĐ ngay sau sinh nhật lần thứ 71 của NĐBH, Quyền Lợi Bảo Hiểm Tử Vong tự động chuyển đổi thế nào?",
+        options: [
+          "A. Chấm dứt ngay quyền lợi bảo hiểm tử vong",
+          "B. Tự động chuyển về Giá trị lớn hơn giữa 100% STBH và Giá Trị Tài Khoản Cơ Bản, sau đó cộng với GTTKĐT (nếu có)",
+          "C. Tăng gấp đôi Số Tiền Bảo Hiểm",
+          "D. Giữ nguyên không có bất kỳ thay đổi nào"
+        ],
+        correct: 1,
+        explain: "Chính xác theo chú thích (2) Slide 07: Tự động chuyển về Giá trị lớn hơn giữa 100% STBH và GTTKCB, sau đó cộng với GTTKĐT (nếu có)."
+      },
+      {
+        cat: "SLIDE 08: ĐẦU TƯ TRÁCH NHIỆM",
+        q: "Eastspring Việt Nam hiện đang quản lý tổng tài sản trên bao nhiêu (tính đến ngày 31/03/2026)?",
+        options: [
+          "A. Trên 50 nghìn tỷ đồng",
+          "B. Trên 100 nghìn tỷ đồng",
+          "C. Trên 175,7 nghìn tỷ đồng (tương đương 6,6 tỷ USD)",
+          "D. Trên 250 nghìn tỷ đồng"
+        ],
+        correct: 2,
+        explain: "Chính xác! Eastspring Việt Nam hiện đang quản lý tổng tài sản trên 175,7 nghìn tỷ đồng (~6,6 tỷ USD) tính đến 31/03/2026 (Slide 08)."
+      },
+      {
+        cat: "SLIDE 09: BẢNG TỶ SUẤT CÁC QUỸ",
+        q: "Quỹ PRUlink Cổ Phiếu Việt Nam đạt lợi nhuận bình quân 10 năm gần nhất (2016-2025) là bao nhiêu %?",
+        options: [
+          "A. 7,2%",
+          "B. 10,7%",
+          "C. 13,1%",
+          "D. 11,9%"
+        ],
+        correct: 2,
+        explain: "Chính xác! Theo Bảng tỷ suất Slide 09, LNBQ 10 năm gần nhất của Quỹ PRUlink Cổ Phiếu Việt Nam đạt 13,1%."
+      },
+      {
+        cat: "SLIDE 11: THƯỞNG TĂNG TRƯỞNG",
+        q: "Tỷ lệ Thưởng Tăng Trưởng chi trả vào Ngày Kỷ Niệm Năm HĐ thứ 10, 15, 20 lần lượt là bao nhiêu % Phí Cơ Bản năm đầu?",
+        options: [
+          "A. 100%, 50%, 50%",
+          "B. 150%, 75%, 75% (Tổng lên đến 300%)",
+          "C. 50%, 25%, 25%",
+          "D. 200%, 50%, 50%"
+        ],
+        correct: 1,
+        explain: "Chính xác! Thưởng Tăng Trưởng chi trả tại Năm thứ 10: 150%, Năm thứ 15: 75%, Năm thứ 20: 75% Phí Cơ Bản năm đầu (Slide 11)."
+      },
+      {
+        cat: "SLIDE 11: ĐÁO HẠN HỢP ĐỒNG",
+        q: "Theo Slide 11, Quyền Lợi Đáo Hạn Hợp Đồng được chi trả như thế nào?",
+        options: [
+          "A. 100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng",
+          "B. 100% Số Tiền Bảo Hiểm",
+          "C. Hoàn trả tổng số phí bảo hiểm đã đóng",
+          "D. 50% GTTKHĐ cộng thưởng tích lũy"
+        ],
+        correct: 0,
+        explain: "Chính xác theo nguyên văn Slide 11: 100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng."
+      },
+      {
+        cat: "SLIDE 12: ĐẶC QUYỀN CHUYỂN GIAO",
+        q: "BMBH có thể thực hiện quyền chuyển giao giá trị tích lũy sang HĐ mới từ khi nào?",
+        options: [
+          "A. NĐBH hiện tại đạt 50 tuổi trở lên",
+          "B. Khi NĐBH hiện tại đạt 60 tuổi trở lên HOẶC từ Ngày Kỷ Niệm Năm HĐ thứ 20, tùy ngày nào đến sau",
+          "C. Bất kỳ lúc nào sau 5 năm đóng phí",
+          "D. Chỉ khi hợp đồng đáo hạn ở tuổi 99"
+        ],
+        correct: 1,
+        explain: "Chính xác theo nguyên văn Slide 12: từ khi NĐBH hiện tại đạt 60 tuổi trở lên hoặc từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 20, tùy ngày nào đến sau."
+      }
+    ];
+
+    let grandGameIndex = 0;
+    let grandGameScore = 0;
+    let grandGameAnswered = false;
+
+    function openGrandGameModal() {
+      playSoundEffect('swipe');
+      document.getElementById('grandGameModal').classList.remove('hidden');
+      document.getElementById('grandGameModal').classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      document.getElementById('gameStartScreen').classList.remove('hidden');
+      document.getElementById('gamePlayScreen').classList.add('hidden');
+      document.getElementById('gameResultScreen').classList.add('hidden');
+      document.getElementById('gameFooterBar').classList.add('hidden');
+      document.getElementById('gameFooterBar').classList.remove('flex');
+      document.getElementById('gameCurrentScore').innerText = '0';
+      document.getElementById('gameProgressBar').style.width = '0%';
+    }
+
+    function closeGrandGameModal() {
+      playSoundEffect('swipe');
+      document.getElementById('grandGameModal').classList.add('hidden');
+      document.getElementById('grandGameModal').classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+
+    function startGrandGame() {
+      playSoundEffect('swipe');
+      grandGameIndex = 0;
+      grandGameScore = 0;
+      document.getElementById('gameCurrentScore').innerText = '0';
+      
+      document.getElementById('gameStartScreen').classList.add('hidden');
+      document.getElementById('gameResultScreen').classList.add('hidden');
+      document.getElementById('gamePlayScreen').classList.remove('hidden');
+      document.getElementById('gameFooterBar').classList.remove('hidden');
+      document.getElementById('gameFooterBar').classList.add('flex');
+
+      renderGrandQuestion();
+    }
+
+    function renderGrandQuestion() {
+      grandGameAnswered = false;
+      const qData = GRAND_QUESTIONS[grandGameIndex];
+      const progressPct = ((grandGameIndex) / GRAND_QUESTIONS.length) * 100;
+      document.getElementById('gameProgressBar').style.width = `${progressPct}%`;
+      
+      document.getElementById('gameQuestionCounter').innerText = `ẢI ${grandGameIndex + 1} / ${GRAND_QUESTIONS.length}`;
+      document.getElementById('gameCategoryTag').innerText = qData.cat;
+      document.getElementById('gameQuestionText').innerText = qData.q;
+
+      const fbBox = document.getElementById('gameFeedbackBox');
+      fbBox.classList.add('hidden');
+      document.getElementById('gameNextBtn').classList.add('hidden');
+
+      const container = document.getElementById('gameOptionsContainer');
+      container.innerHTML = '';
+
+      qData.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-xs sm:text-sm font-semibold text-slate-200 transition duration-150";
+        btn.innerText = optText;
+        btn.onclick = () => selectGrandAnswer(idx, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectGrandAnswer(selectedIdx, btnElement) {
+      if (grandGameAnswered) return;
+      grandGameAnswered = true;
+
+      const qData = GRAND_QUESTIONS[grandGameIndex];
+      const fbBox = document.getElementById('gameFeedbackBox');
+      fbBox.classList.remove('hidden');
+
+      const allBtns = document.querySelectorAll('#gameOptionsContainer button');
+
+      if (selectedIdx === qData.correct) {
+        playSoundEffect('correct');
+        grandGameScore += 100;
+        document.getElementById('gameCurrentScore').innerText = grandGameScore;
+        btnElement.className = "w-full text-left p-4 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-xs sm:text-sm font-bold text-emerald-200";
+        fbBox.className = "p-4 rounded-xl text-xs font-semibold leading-relaxed border bg-emerald-950/60 border-emerald-500 text-emerald-300";
+        fbBox.innerHTML = `✓ <b>CHÍNH XÁC!</b> ${qData.explain}`;
+      } else {
+        playSoundEffect('wrong');
+        btnElement.className = "w-full text-left p-4 rounded-xl bg-red-950/80 border-2 border-red-500 text-xs sm:text-sm font-bold text-red-200";
+        allBtns[qData.correct].className = "w-full text-left p-4 rounded-xl bg-emerald-950/60 border-2 border-emerald-500 text-xs sm:text-sm font-bold text-emerald-300";
+        fbBox.className = "p-4 rounded-xl text-xs font-semibold leading-relaxed border bg-red-950/60 border-red-500 text-red-300";
+        fbBox.innerHTML = `✗ <b>CHƯA ĐÚNG!</b> ${qData.explain}`;
+      }
+
+      document.getElementById('gameNextBtn').classList.remove('hidden');
+    }
+
+    function nextGrandQuestion() {
+      playSoundEffect('swipe');
+      grandGameIndex++;
+      if (grandGameIndex < GRAND_QUESTIONS.length) {
+        renderGrandQuestion();
+      } else {
+        document.getElementById('gameProgressBar').style.width = '100%';
+        document.getElementById('gamePlayScreen').classList.add('hidden');
+        document.getElementById('gameFooterBar').classList.add('hidden');
+        document.getElementById('gameFooterBar').classList.remove('flex');
+        document.getElementById('gameResultScreen').classList.remove('hidden');
+
+        playSoundEffect('fanfare');
+        triggerConfettiGrand();
+
+        const correctCount = grandGameScore / 100;
+        document.getElementById('gameFinalScoreText').innerText = `Bạn đã trả lời đúng ${correctCount}/8 câu hỏi nguyên văn theo Brochure PRU-Đầu Tư Vững Tiến!`;
+
+        let rank = "Bậc Thầy PRU Vững Tiến 👑";
+        if (correctCount < 5) rank = "Chuyên Viên Tiềm Năng 🛡️";
+        else if (correctCount < 8) rank = "Chuyên Gia Tài Chính Vững Lái 🌟";
+        document.getElementById('gameResultRank').innerText = rank;
+      }
+    }
+
+    /* ================= 7. CONFETTI EFFECT GENERATORS ================= */
+    function triggerConfettiSmall() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 40,
+          spread: 60,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    function triggerConfettiGrand() {
+      if (typeof confetti === 'function') {
+        const count = 220;
+        const defaults = { origin: { y: 0.7 } };
+
+        function fire(particleRatio, opts) {
+          confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+          }));
+        }
+
+        fire(0.25, { spread: 26, startVelocity: 55 });
+        fire(0.2, { spread: 60 });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+        fire(0.1, { spread: 120, startVelocity: 45 });
+      }
+    }
+
+    /* ================= INIT ================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCoverflow();
+
+      // Đăng ký sự kiện click/tap tường minh cho 2 nút mũi tên đảm bảo nhận 100% trên thiết bị di động
+      const btnPrev = document.getElementById('btnPrevNav');
+      const btnNext = document.getElementById('btnNextNav');
+
+      if (btnPrev) {
+        const handlePrev = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          prevCard();
+        };
+        btnPrev.addEventListener('click', handlePrev);
+      }
+
+      if (btnNext) {
+        const handleNext = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          nextCard();
+        };
+        btnNext.addEventListener('click', handleNext);
+      }
+    });
+  </script>
+</body>
+</html>
