@@ -47,7 +47,7 @@
 };
 </script>
 
-  <style>
+  <style>ain
     /* ================= 3D STAGE & COVERFLOW ================= */
     .coverflow-stage {
       perspective: 1000px;
@@ -64,8 +64,26 @@
       }
     }
 
+    /* Navigation controls must remain above transformed 3D cards on touch devices. */
+    .coverflow-stage { isolation: isolate; }
+    #btnPrevNav, #btnNextNav {
+      position: absolute !important;
+      top: 50% !important;
+      z-index: 1000 !important;
+      pointer-events: auto !important;
+      touch-action: manipulation !important;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      translate: 0 -50%;
+    }
+    #btnPrevNav { left: 8px; }
+    #btnNextNav { right: 8px; }
+    #btnPrevNav svg, #btnNextNav svg { pointer-events: none; }
+
     .coverflow-track {
       position: relative;
+      z-index: 1;
       width: 100%;
       height: 100%;
       display: flex;
@@ -160,6 +178,84 @@
     .custom-scroll::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
     }
+
+    /* ================= RESPONSIVE MEDIA & DEVICE LAYOUT ================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { min-height: 100vh; min-height: 100svh; }
+    img, video, iframe, canvas, svg { max-width: 100%; }
+    img, video { height: auto; }
+
+    /* Small phones */
+    @media (max-width: 380px) {
+      header { padding-left: 10px !important; padding-right: 10px !important; }
+      header > div { flex-wrap: wrap; row-gap: 8px; }
+      header > div > div:first-child { min-width: 0; flex: 1 1 180px; }
+      header h1 { font-size: 13px !important; }
+      header > div > div:nth-child(2) { margin-left: auto; }
+      #btnSoundToggle { padding: 6px 9px !important; font-size: 10px !important; }
+      .coverflow-stage { height: 350px; perspective: 620px; }
+      .coverflow-card {
+        width: min(68vw, 250px);
+        height: clamp(292px, 52svh, 338px);
+        border-radius: 17px;
+      }
+      #btnPrevNav, #btnNextNav { width: 36px !important; height: 36px !important; }
+      #btnPrevNav { left: 5px !important; }
+      #btnNextNav { right: 5px !important; }
+      main { padding-left: 5px !important; padding-right: 5px !important; }
+      #coverflowCaption { font-size: 11px !important; line-height: 1.45 !important; }
+      #infographicModal, #grandGameModal { padding: 6px !important; }
+      #infographicModal > div, #grandGameModal > div { border-radius: 18px !important; max-height: 96svh !important; }
+      #modalHeaderBg, #grandGameModal > div > div:first-child { padding: 12px !important; gap: 8px; }
+      #modalHeaderIcon { width: 38px !important; height: 38px !important; }
+      #modalHeaderTitle { font-size: 16px !important; }
+      #modalScrollArea, #grandGameModal .custom-scroll { padding: 13px !important; }
+      #modalTabTheoryBtn, #modalTabQuizBtn { padding: 10px 11px !important; white-space: nowrap; }
+      #infographicModal > div > div:nth-last-child(1) { padding: 12px !important; }
+    }
+
+    /* Phones and compact portrait screens */
+    @media (min-width: 381px) and (max-width: 640px) {
+      .coverflow-stage { height: 370px; perspective: 680px; }
+      .coverflow-card { width: min(70vw, 285px); height: clamp(305px, 52svh, 355px); }
+      #btnPrevNav, #btnNextNav { width: 40px !important; height: 40px !important; }
+      #btnPrevNav { left: 7px !important; }
+      #btnNextNav { right: 7px !important; }
+      #infographicModal, #grandGameModal { padding: 8px !important; }
+      #infographicModal > div, #grandGameModal > div { max-height: 96svh !important; }
+      #modalHeaderBg, #grandGameModal > div > div:first-child { padding: 14px 16px !important; }
+      #modalScrollArea, #grandGameModal .custom-scroll { padding: 16px !important; }
+    }
+
+    /* Tablets */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .coverflow-stage { height: 400px; perspective: 850px; }
+      .coverflow-card { width: clamp(245px, 34vw, 300px); height: clamp(330px, 48vh, 370px); }
+      #infographicModal > div, #grandGameModal > div { max-height: 94vh !important; }
+    }
+
+    /* Landscape phones: use the available height instead of forcing portrait card sizes */
+    @media (max-height: 500px) and (orientation: landscape) {
+      header { padding-top: 6px !important; }
+      .coverflow-stage { height: 245px; perspective: 650px; }
+      .coverflow-card { width: clamp(165px, 29vw, 220px); height: 225px; border-radius: 14px; }
+      #btnPrevNav, #btnNextNav { width: 34px !important; height: 34px !important; }
+      #btnPrevNav { left: 4px !important; }
+      #btnNextNav { right: 4px !important; }
+      .coverflow-card > .relative { padding: 10px !important; }
+      main { padding-top: 2px !important; padding-bottom: 2px !important; }
+      main h2 { font-size: 17px !important; }
+      main p { font-size: 10px !important; }
+      #infographicModal, #grandGameModal { align-items: flex-start !important; padding: 5px !important; }
+      #infographicModal > div, #grandGameModal > div { max-height: 98svh !important; margin-top: 0 !important; margin-bottom: 0 !important; }
+      #modalScrollArea, #grandGameModal .custom-scroll { min-height: 0; }
+    }
+
+    /* Respect users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
   </style>
 </head>
 <body class="bg-gradient-to-b from-slate-50 via-slate-100/70 to-slate-200 text-slate-800 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-red-500 selection:text-white">
@@ -199,7 +295,7 @@
   <main class="w-full max-w-6xl mx-auto px-2 sm:px-4 py-1 sm:py-2 flex-1 flex flex-col justify-center items-center relative">
     
     <!-- Title Headline -->
-    <div class="text-center max-w-2xl mx-auto mb-1 sm:mb-2 px-2">
+    <div class="text-center max-w-2xl mx-auto mb-1 sm:mb-2 px-2 py-5">
       <h2 class="text-base sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-snug">
         Khám Phá Quyền Lợi <span class="bg-gradient-to-r from-pru-red to-amber-500 bg-clip-text text-transparent">PRU-Đầu Tư Vững Tiến</span>
       </h2>
@@ -216,7 +312,7 @@
         type="button" 
         id="btnPrevNav"
         class="absolute left-1 sm:left-4 md:left-8 z-[60] w-10 h-10 sm:w-11 sm:h-11 rounded-full glass-btn flex items-center justify-center text-slate-800 shadow-xl cursor-pointer active:scale-90 transition-transform select-none" 
-        aria-label="Previous Benefit"
+        aria-label="Thẻ trước"
         style="touch-action: manipulation; pointer-events: auto;">
         <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
       </button>
@@ -226,7 +322,7 @@
         type="button" 
         id="btnNextNav"
         class="absolute right-1 sm:right-4 md:right-8 z-[60] w-10 h-10 sm:w-11 sm:h-11 rounded-full glass-btn flex items-center justify-center text-slate-800 shadow-xl cursor-pointer active:scale-90 transition-transform select-none" 
-        aria-label="Next Benefit"
+        aria-label="Thẻ tiếp theo"
         style="touch-action: manipulation; pointer-events: auto;">
         <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
       </button>
@@ -523,7 +619,7 @@
 
     <!-- Caption Below Coverflow -->
     <div class="text-center max-w-lg mx-auto mt-1 min-h-[38px] px-2">
-      <p id="coverflowCaption" class="text-[10px] sm:text-xs text-slate-700 font-bold leading-relaxed transition-opacity duration-300">
+      <p id="coverflowCaption" class="text-[10px] sm:text-xs text-slate-700 font-bold leading-relaxed transition-opacity duration-300 py-7">
         <!-- Injected via JS -->
       </p>
     </div>
@@ -876,10 +972,13 @@
       const cards = document.querySelectorAll('.coverflow-card');
       const w = window.innerWidth;
       const isMobile = w < 640;
+      const isTablet = w >= 640 && w < 1024;
       
-      // Responsive spacing and scale adjustments
-      const spacing = isMobile ? Math.min(95, w * 0.25) : (w < 1024 ? 150 : 210);
-      const rotateDeg = isMobile ? 28 : 40;
+      // Responsive spacing and scale adjustments for phone / tablet / desktop
+      const spacing = isMobile
+        ? Math.min(88, w * 0.235)
+        : (isTablet ? Math.min(145, w * 0.19) : (w < 1280 ? 185 : 210));
+      const rotateDeg = isMobile ? 25 : (isTablet ? 34 : 40);
 
       cards.forEach((card, index) => {
         const offset = index - currentCardIndex;
@@ -2044,32 +2143,39 @@
       }
     }
 
-    /* ================= INIT ================= */
-    window.addEventListener('DOMContentLoaded', () => {
-      updateCoverflow();
+    /* ================= INIT / TOUCH-SAFE NAVIGATION ================= */
+    function initCoverflowNavigation() {
+      if (window.__pruCoverflowNavigationReady) return;
+      window.__pruCoverflowNavigationReady = true;
 
-      // Đăng ký sự kiện click/tap tường minh cho 2 nút mũi tên đảm bảo nhận 100% trên thiết bị di động
       const btnPrev = document.getElementById('btnPrevNav');
       const btnNext = document.getElementById('btnNextNav');
 
+      // Native button click fires for mouse, keyboard, iOS and Android taps.
+      // Do not add touchend handlers here: that can cause double navigation.
       if (btnPrev) {
-        const handlePrev = (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+        btnPrev.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
           prevCard();
-        };
-        btnPrev.addEventListener('click', handlePrev);
+        }, { passive: false });
+      }
+      if (btnNext) {
+        btnNext.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          nextCard();
+        }, { passive: false });
       }
 
-      if (btnNext) {
-        const handleNext = (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          nextCard();
-        };
-        btnNext.addEventListener('click', handleNext);
-      }
-    });
+      updateCoverflow();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCoverflowNavigation, { once: true });
+    } else {
+      initCoverflowNavigation();
+    }
   </script>
 </body>
 </html>
