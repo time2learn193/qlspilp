@@ -903,6 +903,46 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
 @keyframes pruWrongShake{0%,100%{transform:translateX(0)}15%,45%,75%{transform:translateX(-7px)}30%,60%,90%{transform:translateX(7px)}}
 @keyframes pruTickPop{0%{opacity:0;transform:scale(.2) rotate(-30deg)}65%{transform:scale(1.35) rotate(6deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 @media(prefers-reduced-motion:reduce){.pru-answer-wrong,.pru-answer-correct .pru-answer-status{animation:none!important}}
+
+/* ===== GAME MOBILE FIT: readable answers without oversized cards ===== */
+#gameOptionsContainer{min-width:0;width:100%}
+#gameOptionsContainer .pru-answer-option{box-sizing:border-box;min-width:0;width:100%;height:auto;white-space:normal;overflow-wrap:anywhere;word-break:normal;text-align:left;align-items:flex-start!important}
+#gameOptionsContainer .pru-answer-copy{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;font-weight:650}
+#gameOptionsContainer .pru-answer-letter{align-self:flex-start;flex-shrink:0}
+#gameOptionsContainer .pru-answer-status{align-self:center;flex-shrink:0}
+#gamePlayScreen{min-width:0}
+@media(max-width:600px){
+ .pru-inline-learning #grandGameModal .pru-game-shell{width:100%!important;min-width:0!important}
+ .pru-inline-learning #grandGameModal .pru-game-shell>div:nth-child(3){padding:12px!important;overflow:visible!important}
+ #gamePlayScreen{gap:12px!important}
+ #gameQuestionText{font-size:clamp(.92rem,3.65vw,1.04rem)!important;line-height:1.48!important}
+ #gameQuestionText::selection,.pru-answer-copy::selection{background:#eab3a0;color:#161d2d}
+ #gamePlayScreen>div:nth-child(2){padding:13px 14px!important;border-radius:12px!important}
+ #gameOptionsContainer{gap:9px!important;grid-template-columns:minmax(0,1fr)!important}
+ #gameOptionsContainer .pru-answer-option{padding:12px!important;gap:10px!important;min-height:50px!important;border-radius:12px!important;font-size:clamp(.81rem,3.25vw,.95rem)!important;line-height:1.45!important}
+ #gameOptionsContainer .pru-answer-copy{line-height:1.48!important;font-weight:600!important}
+ #gameOptionsContainer .pru-answer-letter{width:30px!important;height:30px!important;flex-basis:30px!important;border-radius:9px!important;font-size:.84rem!important}
+ #gameOptionsContainer .pru-answer-status{flex-basis:19px!important;font-size:19px!important}
+ #gameFeedbackBox{padding:12px!important;font-size:.8rem!important;line-height:1.55!important}
+ #gameFooterBar{padding:12px!important;gap:12px!important;align-items:center!important;flex-wrap:wrap!important}
+ #gameFooterBar>span{font-size:.72rem!important;line-height:1.4!important;flex:1 1 160px}
+ #gameNextBtn{min-height:44px!important;font-size:.84rem!important;flex-shrink:0}
+ .pru-inline-learning #grandGameModal .pru-game-header{padding:12px!important}
+}
+@media(max-width:360px){
+ #gameOptionsContainer .pru-answer-option{padding:10px!important;gap:8px!important;font-size:.8rem!important}
+ #gameOptionsContainer .pru-answer-letter{width:27px!important;height:27px!important;flex-basis:27px!important}
+ #gameOptionsContainer .pru-answer-status{flex-basis:16px!important}
+ #gamePlayScreen>div:nth-child(2){padding:11px!important}
+ #gameFooterBar{padding:10px!important}
+}
+
+/* Score badge: label and value share one horizontal row at every viewport */
+.pru-score-inline{display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:clamp(7px,1.4vw,14px)!important;white-space:nowrap!important;flex-shrink:0!important;min-height:42px}
+.pru-score-label{display:inline!important;white-space:nowrap!important;line-height:1.1!important;color:#d4d9e3!important;font-size:clamp(10px,2.5vw,12px)!important}
+.pru-score-value{display:inline!important;white-space:nowrap!important;line-height:1!important;color:#fff!important;font-size:clamp(16px,4vw,21px)!important;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.pru-score-inline{padding:9px 11px!important;min-height:38px}.pru-game-header{gap:8px!important}.pru-game-header>.flex:first-child{min-width:0!important;flex:1 1 auto!important}.pru-game-header>.flex:last-child{gap:8px!important;flex-shrink:0!important}}
+@media(max-width:360px){.pru-score-inline{gap:6px!important;padding:7px 9px!important}.pru-score-label{font-size:9px!important}.pru-score-value{font-size:16px!important}}
 </style>
 </head>
 <body class="bg-gradient-to-b from-slate-50 via-slate-100/70 to-slate-200 text-slate-800 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-red-500 selection:text-white">
@@ -1103,7 +1143,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         <div class="pru-panel-content">
           <p class="pru-eyebrow">PRU-ĐẦU TƯ VỮNG TIẾN</p>
           <h3>ÔN TẬP QUYỀN LỢI SẢN PHẨM</h3>
-          <p class="pru-description">20 câu hỏi được chọn ngẫu nhiên từ ngân hàng 63 câu, phân bổ đều 5 câu cho mỗi phần quyền lợi sản phẩm.</p>
+          
           
         </div>
       </div>
@@ -1194,9 +1234,9 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         </div>
 
         <div class="flex items-center gap-4">
-          <div class="bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700 text-right">
-            <span class="text-[10px] text-[#505565] font-bold block">ĐIỂM SỐ</span>
-            <span id="gameCurrentScore" class="text-base font-black text-[#505565]">0</span>
+          <div class="pru-score-inline bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700">
+            <span class="pru-score-label text-[10px] text-[#505565] font-bold">ĐIỂM SỐ</span>
+            <span id="gameCurrentScore" class="pru-score-value text-base font-black text-[#505565]">0</span>
           </div>
 
           <button onclick="closeGrandGameModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center text-base font-bold transition">
@@ -2344,6 +2384,14 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
       grandGameIndex++;
       if (grandGameIndex < GRAND_QUESTIONS.length) {
         renderGrandQuestion();
+        const viewport = document.getElementById('pruScrollViewport');
+        const gameStage = document.getElementById('gamePlayScreen');
+        if (viewport && gameStage) {
+          requestAnimationFrame(() => {
+            const top = gameStage.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop - 14;
+            viewport.scrollTo({top: Math.max(0, top), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+          });
+        }
       } else {
         document.getElementById('gameProgressBar').style.width = '100%';
         document.getElementById('gamePlayScreen').classList.add('hidden');
