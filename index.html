@@ -872,6 +872,37 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
 }
 @media(prefers-reduced-motion:reduce){.pru-tab-pop,.pru-icon-animate,.pru-discovery[open] .pru-discovery-number{animation:none!important}}
 
+
+/* Quiz data imported verbatim from Excel; mobile-first answer readability */
+.pru-excel-mini{display:grid;gap:16px;color:#3b2c26}
+.pru-excel-mini-heading{font-size:clamp(.87rem,1.4vw,1.1rem);font-weight:900;color:#bd2037;background:#f7e8de;padding:14px 16px;border-radius:14px}
+.pru-excel-question{background:#fffdf9;border:1px solid #dfcdbd;border-radius:18px;padding:clamp(14px,2vw,22px);box-shadow:0 8px 20px #4831250d}
+.pru-excel-question-title{font-weight:800;font-size:clamp(.94rem,1.3vw,1.08rem);line-height:1.65;white-space:pre-wrap}
+.pru-excel-options{display:grid;gap:10px;margin-top:15px}
+.pru-excel-option{width:100%;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;padding:12px 14px;background:#f9f4ee;border:1px solid #d9cbbf;border-radius:12px;font-size:clamp(.85rem,1.1vw,.97rem);color:#43342c;transition:background .2s,transform .2s,border-color .2s}
+.pru-excel-option:not(:disabled):hover{background:#f1e3d6;transform:translateY(-1px);border-color:#bd2037}
+.pru-excel-option:focus-visible{outline:3px solid #dc2443;outline-offset:2px}
+.pru-excel-option:disabled{cursor:default}
+.pru-excel-option.pru-answer-correct{background:#e3f4e9;border:2px solid #258653;color:#135d38;font-weight:800}
+.pru-excel-option.pru-answer-wrong{background:#fce7e7;border:2px solid #ca3548;color:#9e1f30}
+.pru-excel-feedback{display:none;margin-top:13px;padding:12px 14px;border-radius:12px;background:#f4e8de;color:#633f32;white-space:pre-wrap;font-size:.87rem;line-height:1.6;font-weight:750}
+.pru-excel-feedback-visible{display:block}
+.pru-excel-mini-result:not(:empty){background:#4b392e;color:white;padding:15px;border-radius:14px;text-align:center;font-weight:900}
+@media(max-width:600px){.pru-excel-mini{gap:12px}.pru-excel-question{padding:13px}.pru-excel-option{padding:12px;font-size:.85rem}}
+
+
+/* Grand game answer interaction polish */
+#gameProgressBar{background:#fff!important;box-shadow:0 0 10px rgba(255,255,255,.5)}
+.pru-answer-option{display:flex!important;align-items:center;gap:12px;position:relative;min-height:56px;transform-origin:center}
+.pru-answer-letter{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border:1px solid rgba(255,255,255,.32);border-radius:10px;font-size:15px;font-weight:900;text-transform:uppercase;color:#fff}
+.pru-answer-copy{flex:1;min-width:0;line-height:1.55}
+.pru-answer-status{display:grid;place-items:center;flex:0 0 28px;font-size:22px;font-weight:900}
+.pru-answer-correct .pru-answer-status{color:#6ee7b7;animation:pruTickPop .42s cubic-bezier(.2,1.5,.4,1) both}
+.pru-answer-wrong{animation:pruWrongShake .43s ease-in-out both}
+.pru-answer-wrong .pru-answer-status{color:#fda4af}
+@keyframes pruWrongShake{0%,100%{transform:translateX(0)}15%,45%,75%{transform:translateX(-7px)}30%,60%,90%{transform:translateX(7px)}}
+@keyframes pruTickPop{0%{opacity:0;transform:scale(.2) rotate(-30deg)}65%{transform:scale(1.35) rotate(6deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@media(prefers-reduced-motion:reduce){.pru-answer-wrong,.pru-answer-correct .pru-answer-status{animation:none!important}}
 </style>
 </head>
 <body class="bg-gradient-to-b from-slate-50 via-slate-100/70 to-slate-200 text-slate-800 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-red-500 selection:text-white">
@@ -1072,7 +1103,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         <div class="pru-panel-content">
           <p class="pru-eyebrow">PRU-ĐẦU TƯ VỮNG TIẾN</p>
           <h3>ÔN TẬP QUYỀN LỢI SẢN PHẨM</h3>
-          <p class="pru-description">8 câu hỏi tương tác tổng ôn điều kiện tham gia, quyền lợi rủi ro, 7 quỹ, thưởng kép &amp; chuyển giao.</p>
+          <p class="pru-description">20 câu hỏi được chọn ngẫu nhiên từ ngân hàng 63 câu, phân bổ đều 5 câu cho mỗi phần quyền lợi sản phẩm.</p>
           
         </div>
       </div>
@@ -1158,7 +1189,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
           <span class="text-2xl animate-spin" style="animation-duration: 8s;">🏆</span>
           <div>
             <span class="text-[10px] uppercase font-black tracking-widest text-[#505565] block">GAME ÔN TẬP TOÀN BỘ QUYỀN LỢI SẢN PHẨM</span>
-            <h3 class="text-base sm:text-xl font-black">Vượt Ải Bậc Thầy PRU Vững Tiến</h3>
+            
           </div>
         </div>
 
@@ -1175,8 +1206,8 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
       </div>
 
       <!-- Progress Track -->
-      <div class="w-full bg-slate-800 h-2">
-        <div id="gameProgressBar" class="bg-gradient-to-r from-red-500 via-amber-400 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+      <div class="w-full bg-white/25 h-2">
+        <div id="gameProgressBar" class="bg-white h-full w-0 transition-all duration-300"></div>
       </div>
 
       <!-- Game Stage -->
@@ -1187,13 +1218,9 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
           <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-tr from-amber-500 to-red-500 rounded-3xl p-5 flex items-center justify-center shadow-xl shadow-red-500/20">
             <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
-          <h4 class="text-2xl sm:text-3xl font-black text-white">Chinh Phục 8 Câu Hỏi Toàn Quyền Lợi</h4>
-          <p class="text-[#505565] text-xs sm:text-sm max-w-lg mx-auto mt-2 leading-relaxed">
-            Hệ thống câu hỏi bao quát 100% nguyên văn: Điều kiện tham gia, Chi trả rủi ro, 7 Quỹ PRUlink, Thưởng kép lên đến 300%, Đáo hạn và Đặc quyền chuyển giao.
-          </p>
           <div class="mt-8 flex justify-center">
             <button onclick="startGrandGame()" class="bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-black text-base px-8 py-4 rounded-2xl shadow-xl shadow-red-500/30 transform hover:scale-105 active:scale-95 transition">
-              Bắt Đầu Vượt Ải Ngay 🚀
+              BẮT ĐẦU
             </button>
           </div>
         </div>
@@ -1201,7 +1228,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         <!-- Screen 2: Question Playing -->
         <div id="gamePlayScreen" class="hidden space-y-6">
           <div class="flex items-center justify-between text-xs font-bold text-[#505565]">
-            <span id="gameQuestionCounter">ẢI 1 / 8</span>
+            <span id="gameQuestionCounter">ẢI 1 / 20</span>
             <span id="gameCategoryTag" class="text-[#505565] bg-amber-400/10 px-3 py-1 rounded-full uppercase">CHỦ ĐỀ</span>
           </div>
 
@@ -1222,7 +1249,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         <div id="gameResultScreen" class="hidden text-center my-auto py-8">
           <div class="text-6xl mb-3 animate-bounce">👑</div>
           <h4 class="text-2xl sm:text-3xl font-black text-[#505565]" id="gameResultRank">Bậc Thầy PRU Vững Tiến!</h4>
-          <p id="gameFinalScoreText" class="text-[#505565] text-sm mt-2">Bạn đã trả lời đúng 8/8 câu hỏi xuất sắc.</p>
+          <p id="gameFinalScoreText" class="text-[#505565] text-sm mt-2">Bạn đã trả lời đúng 20/20 câu hỏi xuất sắc.</p>
           
           <div class="mt-8 flex flex-wrap justify-center gap-3">
             <button onclick="startGrandGame()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-black text-sm px-6 py-3 rounded-xl transition">
@@ -1240,7 +1267,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
       <div id="gameFooterBar" class="hidden px-6 py-3 bg-slate-950/80 border-t border-slate-800 items-center justify-between">
         <span class="text-xs text-slate-500">Trả lời đúng nhận +100 điểm cho mỗi câu.</span>
         <button id="gameNextBtn" onclick="nextGrandQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs px-5 py-2.5 rounded-xl transition">
-          Tiếp Tục Ải Kế Tiếp ➔
+          Tiếp tục
         </button>
       </div>
 
@@ -1564,7 +1591,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         document.getElementById('modalHeaderTitle').innerText = data.title;
         document.getElementById('modalHeaderTag').innerText = data.tag;
         document.getElementById('infographicBody').innerHTML = data.contentHtml;
-        document.getElementById('miniQuizBody').innerHTML = MINI_QUIZ_TEMPLATES[currentModalSectionId];
+        mountMiniQuiz(currentModalSectionId);
         selectedFundA = null; selectedFundB = null; matchedFundCount = 0;
         switchInfographicTab('theory');
         host.append(info);
@@ -2065,142 +2092,60 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
     };
 
     /* ================= 4. MINI QUIZZES RIÊNG TỪNG PHẦN ================= */
-    const MINI_QUIZ_TEMPLATES = {
-      1: `
-        <div class="bg-red-50 p-5 rounded-2xl border border-red-200">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-black uppercase text-pru-red bg-red-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 1</span>
-            <span class="text-xs font-bold text-slate-500">Bảo Hiểm Rủi Ro & Điều Kiện Tham Gia</span>
-          </div>
-          <h4 class="text-base font-black text-slate-900 mt-2">Kiểm Tra Kiến Thức Phần 1 (Slide 04 - 07)</h4>
-
-          <div class="mt-4 space-y-4">
-            <!-- Q1.1 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200">
-              <span class="text-xs font-extrabold text-slate-800 block mb-2">Câu 1: Độ tuổi tham gia PRU-Đầu Tư Vững Tiến theo quy định tại Slide 05 là bao nhiêu?</span>
-              <div class="space-y-2 text-xs">
-                <button onclick="answerMiniQuiz(1, 1, 0, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
-                  A. 18 tuổi đến 60 tuổi
-                </button>
-                <button onclick="answerMiniQuiz(1, 1, 1, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
-                  B. 30 ngày tuổi – 70 tuổi
-                </button>
-                <button onclick="answerMiniQuiz(1, 1, 2, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
-                  C. 0 ngày tuổi đến 65 tuổi
-                </button>
-              </div>
-              <div id="mq1_1_feedback" class="mt-2 text-xs font-bold hidden"></div>
-            </div>
-
-            <!-- Q1.2 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200">
-              <span class="text-xs font-extrabold text-slate-800 block mb-2">Câu 2: Với Quyền Lợi Bảo Hiểm TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm (chú thích 5, 6), Prudential chi trả thế nào?</span>
-              <div class="space-y-2 text-xs">
-                <button onclick="answerMiniQuiz(1, 2, 0, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
-                  A. Chi trả 100% STBH và chấm dứt HĐBH
-                </button>
-                <button onclick="answerMiniQuiz(1, 2, 1, this)" class="w-full text-left p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
-                  B. Chi trả một lần duy nhất số tiền nhỏ hơn giữa 10% STBH và 100 triệu đồng; HĐBH vẫn tiếp tục hiệu lực
-                </button>
-              </div>
-              <div id="mq1_2_feedback" class="mt-2 text-xs font-bold hidden"></div>
-            </div>
-          </div>
-        </div>
-      `,
-
-      2: `
-        <div class="bg-sky-50 p-5 rounded-2xl border border-sky-200">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-black uppercase text-sky-800 bg-sky-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 2</span>
-            <span class="text-xs font-bold text-slate-500">7 Quỹ PRUlink & Lợi Nhuận Bình Quân</span>
-          </div>
-          <h4 class="text-base font-black text-slate-900 mt-2">Nối Cặp Tỷ Suất Sinh Lời Bình Quân 10 Năm (2016-2025)</h4>
-          <p class="text-xs text-slate-600 mt-1">Chọn Quỹ ở Cột Trái rồi chọn LNBQ 10 năm tương ứng ở Cột Phải (theo đúng bảng Slide 09).</p>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-xs font-bold">
-            <div class="space-y-2" id="mqFundColLeft">
-              <div data-id="cp" onclick="selectFundPair('L', 'cp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
-                📈 Quỹ PRUlink Cổ Phiếu Việt Nam
-              </div>
-              <div data-id="tp" onclick="selectFundPair('L', 'tp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
-                🏛️ Quỹ PRUlink Trái Phiếu Việt Nam
-              </div>
-            </div>
-
-            <div class="space-y-2" id="mqFundColRight">
-              <div data-id="tp" onclick="selectFundPair('R', 'tp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
-                LNBQ 10 năm gần nhất: 7,2%
-              </div>
-              <div data-id="cp" onclick="selectFundPair('R', 'cp', this)" class="p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-sky-400">
-                LNBQ 10 năm gần nhất: 13,1%
-              </div>
-            </div>
-          </div>
-          <div id="mqFundFeedback" class="mt-3 text-center text-xs font-bold text-slate-600">Đã ghép đúng: <span id="mqFundCount">0</span>/2 cặp</div>
-        </div>
-      `,
-
-      3: `
-        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-black uppercase text-amber-900 bg-amber-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 3</span>
-            <span class="text-xs font-bold text-slate-500">Mốc Thưởng Kép & Đáo Hạn</span>
-          </div>
-          <h4 class="text-base font-black text-slate-900 mt-2">Thử Thách: Tỷ Lệ Thưởng Tăng Trưởng & Thưởng Gắn Kết (Slide 11)</h4>
-
-          <div class="mt-4 space-y-3 text-xs">
-            <div class="bg-white p-4 rounded-xl border border-slate-200">
-              <span class="font-extrabold text-slate-800 block mb-1">Quyền lợi Thưởng Tăng Trưởng vào Ngày Kỷ Niệm Năm HĐ thứ 10 là bao nhiêu?</span>
-              <div class="grid grid-cols-3 gap-2 mt-2">
-                <button onclick="answerMiniQuiz(3, 1, '50%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">50%</button>
-                <button onclick="answerMiniQuiz(3, 1, '100%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">100%</button>
-                <button onclick="answerMiniQuiz(3, 1, '150%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">150% Phí Cơ Bản năm đầu</button>
-              </div>
-              <div id="mq3_1_feedback" class="mt-2 text-xs font-bold hidden"></div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl border border-slate-200">
-              <span class="font-extrabold text-slate-800 block mb-1">Khi Đáo Hạn Hợp Đồng, Quyền lợi khách hàng nhận được là gì?</span>
-              <div class="grid grid-cols-2 gap-2 mt-2">
-                <button onclick="answerMiniQuiz(3, 2, '100%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">100% GTTKHĐ tại Ngày Định Giá Kế Tiếp</button>
-                <button onclick="answerMiniQuiz(3, 2, '80%', this)" class="p-2 rounded border hover:bg-slate-50 font-bold">80% Số Tiền Bảo Hiểm</button>
-              </div>
-              <div id="mq3_2_feedback" class="mt-2 text-xs font-bold hidden"></div>
-            </div>
-          </div>
-        </div>
-      `,
-
-      4: `
-        <div class="bg-purple-50 p-5 rounded-2xl border border-purple-200">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-black uppercase text-purple-900 bg-purple-100 px-3 py-1 rounded-full">MINI QUIZ PHẦN 4</span>
-            <span class="text-xs font-bold text-slate-500">Đặc Quyền Chuyển Giao & Quyền BMBH</span>
-          </div>
-          <h4 class="text-base font-black text-slate-900 mt-2">Kiểm Tra: Đúng/Sai Về Quyền BMBH & Hợp Đồng Mới (Slide 12 & 13)</h4>
-
-          <div class="mt-4 space-y-3 text-xs">
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <span class="font-bold text-slate-800">1. Hợp đồng bảo hiểm mới nhận chuyển giao KHÔNG áp dụng Thời hạn đóng phí bắt buộc và KHÔNG áp dụng Phí Ban Đầu.</span>
-              <div class="flex gap-2 shrink-0">
-                <button onclick="answerTF(1, true, this)" class="px-3 py-1 rounded border font-bold">Đúng</button>
-                <button onclick="answerTF(1, false, this)" class="px-3 py-1 rounded border font-bold">Sai</button>
-              </div>
-            </div>
-
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <span class="font-bold text-slate-800">2. BMBH có thể yêu cầu rút tiền từ GTTKCB kể từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 3 trở đi hoàn toàn không tốn phí.</span>
-              <div class="flex gap-2 shrink-0">
-                <button onclick="answerTF(2, true, this)" class="px-3 py-1 rounded border font-bold">Đúng</button>
-                <button onclick="answerTF(2, false, this)" class="px-3 py-1 rounded border font-bold">Sai</button>
-              </div>
-            </div>
-          </div>
-          <div id="mq4_feedback" class="mt-3 text-center text-xs font-bold text-slate-600"></div>
-        </div>
-      `
-    };
+    // Nguồn duy nhất: ilp.xlsx (63 câu). Chuỗi câu hỏi và phương án giữ nguyên văn.
+    const EXCEL_QUESTION_BANK = [{"id":1,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền Lợi Bảo Hiểm Tử Vong đối với NĐBH ở độ tuổi từ 3 tuổi đến dưới 4 tuổi? ","options":["a. 75% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","b. 100% STBH + GTTKCB - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","c.  50% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong nếu có.","d. 25% STBH + GTTKĐT - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có."],"correct":0},{"id":2,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền Lợi Bảo Hiểm Tử Vong đối với NĐBH ở độ tuổi dưới 1 tuổi? ","options":["a. Chi trả toàn bộ Phí BH Cơ Bản và Phí BH Đóng Thêm đã đóng, không có lãi, khấu trừ (các) khoản rút tiền, nếu có, và (các) Khoản Nợ, nếu có","b. 100% STBH + GTTKCB - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","c. Chi trả toàn bộ Phí BH Đóng Thêm đã đóng, không có lãi, khấu trừ các khoản rút tiền và (các) Khoản Nợ, nếu có.","d. 25% STBH + GTTKĐT - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có."],"correct":0},{"id":3,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền Lợi Bảo Hiểm Tử Vong đối với NĐBH ở độ tuổi từ 2 tuổi đến dưới 3 tuổi? ","options":["a. 50% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","b. 75% STBH + GTTKCB - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","c. 100% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong nếu có.","d. Không chi trả."],"correct":0},{"id":4,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền Lợi Bảo Hiểm Tử Vong đối với NĐBH ở độ tuổi từ 4 tuổi đến dưới 71 tuổi? ","options":["a. 100% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","b. 100% STBH + GTTKCB - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","c. 100% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong nếu có.","d. 100% STBH + GTTKĐT - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có."],"correct":0},{"id":5,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền Lợi Bảo Hiểm Tử Vong đối với NĐBH ở độ tuổi từ 71 tuổi trở lên? ","options":["a. Giá trị lớn hơn giữa 100% STBH và GTTKHĐ","b. Giá trị lớn hơn giữa 100% STBH và GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","c. Giá trị lớn hơn giữa (100% STBH và GTTKCB) + GTTKĐT ","d. Giá trị lớn hơn giữa (100% STBH và GTTKCB) + GTTKĐT - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có."],"correct":3},{"id":6,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm đối với NĐBH từ 1 tuổi đến dưới 71 tuổi? ","options":["a. 10% STBH, nhưng không vượt quá  100 triệu đồng  tính trên 1 HĐBH PRU - Đầu Tư Vững Tiến và trên tất cả các HĐBH có cùng QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm với cùng 1 NĐBH","b. 100 triệu đồng","c. Giá trị lớn hơn giữa 10% STBH và 100 triệu đồng","d. Giá trị nhỏ hơn giữa 100% STBH và 100 triệu đồng"],"correct":0},{"id":7,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với QLBH TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm đối với NĐBH từ 4 tuổi đến dưới 71 tuổi? ","options":["a. 100% STBH + GTTKHĐ – Các khoản rút tiền được thực hiện kể từ ngày NĐBH được chứng nhận bị TTTBVV Không Do UTTG Giai Đoạn Sớm  và (các) Khoản nợ, nếu có","b. 100% STBH + GTTKHĐ – Các khoản rút tiền kể từ ngày NĐBH được xác nhận bị TTTBVV Không Do UTTG Giai Đoạn Sớm","c. Giá trị lớn hơn giữa STBH và GTTKHĐ ","d. Giá trị lớn hơn giữa STBH và GTTKHĐ – (các) Khoản nợ, nếu có"],"correct":0},{"id":8,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền lợi bảo hiểm TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm đối với NĐBH ở độ tuổi từ 3 tuổi đến dưới 4 tuổi? ","options":["a. 75% STBH + GTTKHĐ - Các khoản rút tiền được thực hiện kể từ ngày NĐBH được chứng nhận bị TTTBVV Không Do UTTG Giai Đoạn Sớm  và (các) Khoản nợ, nếu có","b. 100% STBH - (các) Khoản nợ, nếu có","c. 50% STBH + GTTKHĐ ","d. 25% STBH + GTTKĐT – (các) Khoản nợ, nếu có"],"correct":0},{"id":9,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền lợi bảo hiểm TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm đối với NĐBH ở độ tuổi từ 2 tuổi đến dưới 3 tuổi? ","options":["a. 75% STBH + GTTKHĐ - (các) Khoản nợ, nếu có","b. 100% STBH - (các) Khoản nợ, nếu có","c. 50% STBH + GTTKHĐ - Các khoản rút tiền được thực hiện kể từ ngày NĐBH được chứng nhận bị TTTBVV Không Do UTTG Giai Đoạn Sớm và (các) Khoản nợ, nếu có","d. 25% STBH + GTTKĐT – (các) Khoản nợ, nếu có"],"correct":2},{"id":10,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền lợi bảo hiểm TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm đối với NĐBH ở độ tuổi dưới 1 tuổi? ","options":["a. Chi trả toàn bộ Phí BH Đóng Thêm đã đóng, không có lãi, khấu trừ các khoản rút tiền và (các) Khoản Nợ, nếu có. ","b. Chi trả toàn bộ Phí BH Cơ Bản và Phí BH Đóng Thêm đã đóng, không khấu trừ các khoản rút tiền và (các) Khoản Nợ, nếu có. ","c. Chi trả toàn bộ Phí BH Cơ Bản và Phí BH Đóng Thêm đã đóng, không có lãi, khấu trừ (các) khoản rút tiền, nếu có, và (các) Khoản Nợ, nếu có","d. Chi trả toàn bộ Phí BH Cơ Bản và Phí BH Đóng Thêm đã đóng, có tính lãi, khấu trừ các khoản rút tiền và (các) Khoản Nợ, nếu có. "],"correct":2},{"id":11,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, Ngay sau khi NĐBH Tử Vong hoặc QLBH TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm được chấp thuận chi trả, Hợp Đồng Bảo Hiểm sẽ:","options":["a. BMBH được quyền chuyển giao hợp đồng sang NĐBH khác.","b. Chấm dứt bảo hiểm các sản phẩm Bán cùng.","c. Vẫn duy trì hiệu lực hợp đồng.","d. Chấm dứt hiệu lực."],"correct":3},{"id":12,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, phát biểu nào là đúng với Quyền lợi BH TTTBVV: ","options":["a. QLBH TTTBVV sẽ kết thúc vào Ngày Kỷ Niệm Năm Hợp Đồng ngay sau sinh nhật lần thứ 71 của NĐBH.","b. QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm được chấp thuận chi trả 01 lần duy nhất trong suốt Thời Hạn Hợp Đồng. Sau khi quyền lợi này được chấp thuận chi trả, HĐBH tiếp tục có hiệu lực và NĐBH được tiếp tục bảo vệ cho Quyền Lợi Bảo Hiểm TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm hoặc Quyền Lợi Bảo Hiểm Tử Vong.","c. Mức chi trả tối đa cho QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm là 100 triệu đồng  - tính trên 1 HĐBH PRU - Đầu Tư Vững Tiến và trên tất cả các HĐBH có cùng QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm với cùng 1 NĐBH","d. Câu a, b, c đúng"],"correct":3},{"id":13,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , trường hợp NĐBH tử vong lúc 2 tuổi. Hợp đồng đang có STBH là 1,5 tỷ; GTTKHĐ là 10 triệu đồng (không có GTTKĐT), không rút tiền và cũng không có nợ. Prudential chấp thuận chi trả cho trường hợp này. Hỏi Prudential sẽ chi trả bao nhiêu?","options":["a. 1,5 tỷ đồng","b. 1 tỷ đồng","c. 760 triệu đồng","d. 500 triệu đồng "],"correct":2},{"id":14,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , trường hợp NĐBH tử vong lúc 60 tuổi. Hợp đồng đang có STBH là 1,5 tỷ; GTTKHĐ là 10 triệu đồng (không có GTTKĐT), không rút tiền và cũng không có nợ. Prudential chấp thuận chi trả cho trường hợp này. Hỏi Prudential sẽ chi trả bao nhiêu?","options":["a. 1.010.000.000 đồng","b. 1.510.000.000 đồng","c. 1.760.000.000 đồng","d. 1.500.000.000 đồng"],"correct":1},{"id":15,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , trường hợp NĐBH tử vong lúc 90 tuổi. Hợp đồng đang có STBH là 1,5 tỷ; GTTKHĐ là 10 triệu đồng (không có GTTKĐT), không rút tiền và cũng không có nợ. Prudential chấp thuận chi trả cho trường hợp này. Hỏi Prudential sẽ chi trả bao nhiêu?","options":["a. 2.000.000.000 đồng","b. 1.750.000.000 đồng","c. 1.500.000.000 đồng","d. 1.510.000.000 đồng"],"correct":2},{"id":16,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , quyền lợi BH TTTBVV sẽ bao gồm: ","options":["a. QLBH TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm","b. QLBH TTTBVV do tổn thương cơ thể và các di chứng do bệnh hiểm nghèo","c. QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm","d. QLBH TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm và QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm"],"correct":3},{"id":17,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , trường hợp NĐBH tử vong lúc 60 tuổi. Hợp đồng đang có STBH là 1,5 tỷ; GTTKHĐ là 10 triệu đồng (không có GTTKĐT), không rút tiền nhưng còn khoản phí rủi ro và phí quản lý HĐ còn nợ là 200 ngàn đồng. Prudential chấp thuận chi trả cho trường hợp này. Hỏi Prudential sẽ chi trả bao nhiêu?","options":["a. 1.010.000.000 đồng","b. 1.509.800.000 đồng","c. 1.760.000.000 đồng","d. 1.510.000.000 đồng"],"correct":1},{"id":18,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm được định nghĩa như thế nào?","options":["a. Ung Thư Tuyến Giáp Giai Đoạn Sớm được xác định là ung thư tuyến giáp không thuộc giai đoạn IV (theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm), và không di căn xa (không di căn xa tương ứng với phân loại M0 theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm.)","b. Ung Thư Tuyến Giáp Giai Đoạn Sớm được xác định là ung thư tuyến giáp không thuộc giai đoạn IV (theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm)","c. Ung Thư Tuyến Giáp Giai Đoạn Sớm được xác định là ung thư tuyến giáp không di căn xa (không di căn xa tương ứng với phân loại M0 theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm.)","d.Ung Thư Tuyến Giáp Giai Đoạn Sớm được xác định là ung thư tuyến giáp không thuộc giai đoạn IV (theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm), và đã di căn xa (theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm.)"],"correct":0},{"id":19,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , QLBH TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm bao gồm các trường hợp nào?","options":["a. NĐBH được chứng nhận bị TTTBVV do mất/liệt hoàn toàn bộ phận cơ thể. ","b. NĐBH được chứng nhận bị (1) TTTBVV do mất/liệt hoàn toàn bộ phận cơ thể; hoặc (2) TTTBVV do tổn thương cơ thể và không bao gồm tổn thương liên quan đến ung thư tuyến giáp; hoặc (3) TTTBVV do ung thư tuyến giáp Thuộc giai đoạn IV (theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm), hoặc có di căn xa (có di căn xa tương ứng với phân loại M1 theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm.)","c. NĐBH được chứng nhận bị TTTBVV do tổn thương cơ thể và không bao gồm tổn thương liên quan đến ung thư tuyến giáp","d. NĐBH được chứng nhận bị TTTBVV do ung thư tuyến giáp Thuộc giai đoạn IV (theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm), hoặc có di căn xa (có di căn xa tương ứng với phân loại M1 theo Hệ thống phân loại giai đoạn ung thư TNM phiên bản mới nhất của AJCC tại thời điểm xảy ra sự kiện bảo hiểm.)"],"correct":1},{"id":20,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN , khi thực hiện rút tiền từ GTTKCB, giá trị tài khoản cơ bản tối thiểu sau khi rút phải còn ít nhất là bao nhiêu theo quy định hiện hành của Prudential?","options":["a. BMBH được yêu cầu rút tiền từ năm thứ 4. Năm hợp đồng thứ 4 và thứ 5, GTTKCB tối thiểu sau khi rút là giá trị nhỏ hơn giữa (100% Phí BH cơ bản năm đầu và 20 triệu đồng); từ năm thứ 6 trở đi phải còn ít nhất là 5 triệu đồng. ","b. BMBH được yêu cầu rút tiền từ năm thứ 4. Năm hợp đồng thứ 4 và thứ 5, GTTKCB tối thiểu sau khi rút là giá trị lớn hơn giữa (100% Phí BH cơ bản năm đầu và 20 triệu đồng); từ năm thứ 6 trở đi phải còn ít nhất là 5 triệu đồng. ","c. BMBH được yêu cầu rút tiền từ năm thứ 4. Năm hợp đồng thứ 4 và thứ 5, GTTKCB tối thiểu sau khi rút là giá trị nhỏ hơn giữa (100% Phí BH cơ bản năm đầu và 20 triệu đồng); từ năm thứ 6 trở đi phải còn ít nhất là 2 triệu đồng. ","d. BMBH được yêu cầu rút tiền từ năm thứ 4. Năm hợp đồng thứ 4 và thứ 5, GTTKCB tối thiểu sau khi rút là 20 triệu đồng; từ năm thứ 6 trở đi phải còn ít nhất là 5 triệu đồng. "],"correct":0},{"id":21,"q":"Phát biểu nào là đúng khi nói đến Điều khoản loại trừ đối với trường hợp NĐBH tử vong?","options":["a. Tự tử hoặc tự gây thương tích, dù trong trạng thái tinh thần bình thường hay mất trí, trong thời hạn 02 năm kể từ ngày BMBH nộp khoản Phí BHCB đầu tiên hoặc kể từ ngày HĐBH khôi phục hiệu lực gần nhất, tùy ngày nào đến sau. Trường hợp HĐBH có tăng STBH so với lúc phát hành, phần tăng thêm của STBH cũng áp dụng loại trừ tại điều này trong vòng 02 năm tính từ ngày có hiệu lực của việc tăng STBH hoặc từ ngày HĐBH khôi phục hiệu lực gần nhất, tùy ngày nào đến sau","b. Do hành vi phạm tội (theo kết luận của cơ quan nhà nước có thẩm quyền) hoặc do lỗi cố ý của BMBH và NTH gây ra cho NĐBH","c. NĐBH bị thi hành án tử hình","d. a, b, c đúng"],"correct":3},{"id":22,"q":"Prudential sẽ không chi trả Quyền Lợi BH TTTBVV nếu tình trạng TTTBVV của NĐBH:","options":["a. Do lỗi cố ý của NĐBH và/hoặc BMBH và/hoặc NTH gây ra cho Người Được Bảo Hiểm","b. NĐBH sử dụng chất gây nghiện, ma túy, chất kích thích mà vi phạm pháp luật hoặc không theo chỉ định của Bác Sỹ","c. Do hành vi phạm tội (theo kết luận của cơ quan nhà nước có thẩm quyền) của NĐBH và/hoặc BMBH và/hoặc NTH gây ra cho Người Được Bảo Hiểm","d. a, b, c đúng"],"correct":3},{"id":23,"q":"Khi Người Được Bảo Hiểm tử vong trong các trường hợp loại trừ, Prudential sẽ chi trả cho BMBH:","options":["a. Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá vừa qua, trước ngày Prudential từ chối giải quyết Quyền Lợi Bảo Hiểm Tử Vong; và Phí Ban Đầu; và Phí Rủi Ro; và Phí Bảo Hiểm Cơ Bản chưa được phân bổ, nếu có và khấu trừ (các) Khoản Nợ, chi phí khám, xét nghiệm y khoa, nếu có","b. Giá Trị Hoàn Lại (không áp dụng phí chấm dứt hợp đồng trước hạn) tại Ngày Định Giá Kế Tiếp ngay sau ngày Prudential từ chối giải quyết Quyền Lợi Bảo Hiểm Tử Vong; và Phí Ban Đầu; và Phí Rủi Ro; và Phí Bảo Hiểm Cơ Bản chưa được phân bổ, nếu có và khấu trừ (các) Khoản Nợ, chi phí khám, xét nghiệm y khoa, nếu có","c. Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau ngày Prudential từ chối giải quyết Quyền Lợi Bảo Hiểm Tử Vong; và Phí Ban Đầu; và Phí Rủi Ro; và Phí Bảo Hiểm Cơ Bản chưa được phân bổ, nếu có ","d. Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau ngày Prudential từ chối giải quyết Quyền Lợi Bảo Hiểm Tử Vong; và Phí Rủi Ro; và Phí Bảo Hiểm Cơ Bản chưa được phân bổ, nếu có và khấu trừ (các) Khoản Nợ, chi phí khám, xét nghiệm y khoa, nếu có"],"correct":1},{"id":24,"q":"Khi NĐBH bị TTTBVV trong các trường hợp loại trừ, nếu BMBH tiếp tục đóng phí BH, hợp đồng sẽ như thế nào?","options":["a. HĐBH sẽ chấm dứt hiệu lực ","b. HĐBH vẫn tiếp tục duy trì hiệu lực và NĐBH tiếp tục được BH cho các trường hợp không thuộc điều khoản loại trừ","c. HĐBH vẫn tiếp tục hiệu lực nhưng NĐBH chỉ được bảo hiểm cho trường hợp tử vong.","d. HĐBH vẫn tiếp tục hiệu lực và NĐBH sẽ được tặng thêm 2 sản phẩm Bán cùng"],"correct":1},{"id":25,"q":"Khi tham gia sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khách hàng được lựa chọn và nhận kết quả đầu tư từ các Quỹ nào sau đây:","options":["a. Quỹ PRUlink Cổ Phiếu VN, Quỹ PRUlink Trái Phiếu VN, Quỹ PRUlink Tăng Trưởng, Quỹ PRUlink Bảo Vệ","b. Quỹ PRUlink Cổ Phiếu VN, Quỹ PRULink Tương Lai Xanh, Quỹ PRUlink An Tâm, Quỹ PRUlink Tăng Trưởng, Quỹ PRUlink Bền Vững, Quỹ PRUlink Trái Phiếu VN, Quỹ PRUlink Bảo Toàn","c. Quỹ PRUlink Cổ Phiếu VN, Quỹ PRULink Tương Lai Xanh, Quỹ PRUlink Tăng Trưởng, Quỹ PRUlink Cân Bằng, Quỹ PRUlink Bền Vững, Quỹ PRUlink Trái Phiếu VN, Quỹ PRUlink Bảo Toàn","d. Quỹ PRUlink Cổ Phiếu VN, Quỹ PRULink Tương Lai Xanh, Quỹ PRUlink Tăng Trưởng, Quỹ PRUlink Cân Bằng, Quỹ PRUlink Bền Vững, Quỹ PRUlink Trái Phiếu VN"],"correct":2},{"id":26,"q":"Tham gia sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, nếu Hợp Đồng Bảo Hiểm còn hiệu lực và Người Được Bảo Hiểm còn sống vào Ngày Đáo Hạn Hợp Đồng, khách hàng sẽ nhận được quyền lợi đáo hạn là:","options":["a. Nhận 1 lần và toàn bộ Số tiền bảo hiểm, sau khi khấu trừ (các) Khoản Nợ, nếu có.","b. Nhận 1 lần và toàn bộ Giá trị tài khoản cơ bản tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng","c. Nhận 1 lần và toàn bộ Giá trị tài khoản cơ bản tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng + STBH","d. Nhận 1 lần và toàn bộ Giá trị tài khoản hợp đồng tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng và sau khi khấu trừ (các) Khoản Nợ, nếu có"],"correct":3},{"id":27,"q":"Trường hợp BMBH tham gia hợp đồng BH PRU-ĐẦU TƯ VỮNG TIẾN, BMBH đóng phí định kỳ đầy đủ liên tục trong 20 năm, không rút tiền cũng như không giảm STBH. Hỏi: BMBH sẽ nhận Thưởng Tăng Trưởng là bao nhiêu vào Ngày Kỷ Niệm Năm Hợp Đồng năm thứ 10, 15 và 20?","options":["a. 150%, 100%, 75% của Phí BH cơ bản năm đầu.","b. 150%, 75%, 75% của Phí BH cơ bản quy năm của Năm Hợp Đồng đầu tiên.","c. 100%, 75%, 75% của Phí BH cơ bản năm đầu.","d. 150%, 75%, 50% của Phí BH cơ bản năm đầu.  "],"correct":1},{"id":28,"q":"Trường hợp BMBH tham gia hợp đồng BH PRU-ĐẦU TƯ VỮNG TIẾN, BMBH đóng phí định kỳ đầy đủ liên tục trong 20 năm, không rút tiền cũng như không giảm STBH trong suốt 20 năm. Hỏi: BMBH sẽ nhận Thưởng Gắn kết là bao nhiêu vào Ngày Kỷ Niệm Năm Hợp Đồng thứ 10, 15 và 20?","options":["a. 50%, 50%, 50% của Phí rủi ro đã được khấu trừ trong thời gian xét thưởng.","b. 50%, 50%, 25% của Phí rủi ro đã được khấu trừ trong thời gian xét thưởng.","c. 100%, 25%, 25% của Phí rủi ro đã được khấu trừ trong thời gian xét thưởng.","d. 50%, 25%, 25% tổng Phí rủi ro đã khấu trừ trong thời gian xét thưởng theo quy định."],"correct":3},{"id":29,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, BMBH được quyền thay đổi STBH tối đa bao nhiêu lần trong 1 năm hợp đồng? ","options":["a. 3 lần/ năm","b. 2 lần/ năm","c. 1 lần/ năm","d. Tùy ý khách hàng. "],"correct":2},{"id":30,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi BMBH yêu cầu thay đổi giảm STBH, BMBH lưu ý: ","options":["a. STBH sau khi giảm không được nhỏ hơn mức tối thiểu theo quy định của PVA: 150 triệu VND và được áp dụng trong giai đoạn linh hoạt đóng phí BH Cơ Bản.","b. STBH sau khi giảm không được nhỏ hơn mức tối thiểu theo quy định của PVA: 100 triệu VND và được áp dụng trong giai đoạn linh hoạt đóng phí","c. STBH sau khi giảm cần phù hợp với khả năng tài chính của khách hàng khi yêu cầu và được áp dụng trong giai đoạn linh hoạt đóng phí","d. STBH sau khi giảm không được nhỏ hơn mức tối thiểu theo quy định của PVA: 150 triệu VND và không được áp dụng trong giai đoạn linh hoạt đóng phí"],"correct":0},{"id":31,"q":"Khi tham gia sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, thời điểm nào BMBH có thể yêu cầu thay đổi STBH?","options":["a. Được thực hiện trong thời gian đóng phí linh hoạt và bắt đầu từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 3. Lưu ý, Phí Bảo Hiểm Cơ Bản, Phí Rủi Ro sẽ được điều chỉnh tương ứng. STBH mới sẽ được áp dụng ngay sau ngày PVA chấp thuận yêu cầu.","b. Được thực hiện trong thời hạn cân nhắc và  bắt đầu từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 2. Lưu ý, Phí Bảo Hiểm Cơ Bản, Phí Rủi Ro sẽ được điều chỉnh tương ứng. STBH mới sẽ được áp dụng từ Ngày kỷ niệm năm HĐ ngay sau ngày PVA chấp thuận yêu cầu.","c. Được thực hiện bắt đầu từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 4. Lưu ý, Phí Bảo Hiểm Cơ Bản, Phí Rủi Ro sẽ được điều chỉnh tương ứng. STBH mới sẽ được áp dụng từ Ngày kỷ niệm năm HĐ ngay sau ngày PVA chấp thuận yêu cầu.","d. Được thực hiện kể từ sau Ngày kỉ niệm năm HĐ thứ 2."],"correct":1},{"id":32,"q":"Khi tham gia sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, BMBH cần lưu ý những quy định gì khi yêu cầu tăng STBH?","options":["a. Yêu cầu tăng STBH phải được thực hiện ngay ngày kỷ niệm năm HĐ ngay sau sinh nhật lần thứ 71 của NĐBH. NĐBH cần đáp ứng các điều kiện thẩm định của PVA. Không áp dụng trong giai đoạn linh hoạt đóng phí.","b. Được thực hiện trong thời hạn cân nhắc và sau Ngày kỉ niệm năm HĐ đầu tiên.","c. Yêu cầu tăng STBH phải được thực hiện trước ngày kỷ niệm năm HĐ ngay sau sinh nhật lần thứ 71 của NĐBH. NĐBH cần đáp ứng các điều kiện thẩm định của PVA. Không áp dụng trong giai đoạn linh hoạt đóng Phí Bảo Hiểm Cơ Bản.","d. Yêu cầu tăng STBH phải được thực hiện sau ngày kỷ niệm năm HĐ ngay sau sinh nhật lần thứ 80 của NĐBH. NĐBH cần đáp ứng các điều kiện thẩm định của PVA. Không áp dụng trong giai đoạn linh hoạt đóng phí."],"correct":2},{"id":33,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, BMBH được quyền đóng thêm Phí BH Đóng Thêm : ","options":["a. Không vượt quá 5 lần phí BH cơ bản quy năm của năm HĐ hiện tại","b. BMBH chỉ được đóng thêm phí BH khi phí BH cơ bản đến hạn đã được đóng đầy đủ","c. Phí BH đóng thêm sẽ không làm tăng STBH, Phí BH đóng thêm chỉ được phân bổ khi có yêu cầu đóng Phí BH đóng thêm từ BMBH","d. a, b,c đúng"],"correct":3},{"id":34,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, trong trường hợp sử dụng quyền linh hoạt đóng Phí BH Cơ Bản, BMBH không thể yêu cầu thực hiện: ","options":["a. Quyền Chấm dứt BH bán cùng, Đóng phí BH đóng thêm","b. Quyền Chuyển đổi quỹ, Đóng phí BH đóng thêm","c. Quyền giảm STBH, Rút tiền từ GTTKĐT","d. Quyền Tăng STBH, Đóng phí BH Đóng Thêm"],"correct":3},{"id":35,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, Trường hợp BMBH yêu cầu chấm dứt HĐ trước hạn, BMBH sẽ nhận được gì?","options":["a. Giá trị hoàn lại của HĐ (= GTTKCB + GTTKĐT, nếu có – các khoản nợ, nếu có)","b. Giá trị hoàn lại của HĐ (= (GTTKCB – phí chấm dứt HĐ trước hạn) + GTTKĐT, nếu có – các khoản nợ, nếu có)","c. Giá trị hoàn lại của HĐ (= GTTKCB + (GTTKĐT, nếu có – phí chấm dứt HĐ trước hạn)","d. Giá trị hoàn lại của HĐ (GTTKCB + GTTKĐT, nếu có)"],"correct":1},{"id":36,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, Tuổi tham gia của NĐBH là:","options":["a. 30 ngày tuổi – 65 tuổi ","b. 1 tuổi – 65 tuổi ","c. 1 tuổi – 70 tuổi ","d. 30 ngày tuổi – 70 tuổi "],"correct":3},{"id":37,"q":"Khi tham gia sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, BMBH phải đảm bảo thỏa phí bảo hiểm cơ bản tối thiểu quy năm và STBH tối thiểu là: ","options":["a. 10 triệu đồng _ 150 triệu đồng","b. 15 triệu đồng _ 150 triệu đồng","c. 12 triệu đồng _ 150 triệu đồng","d. 12 triệu đồng _ 100 triệu đồng"],"correct":2},{"id":38,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, thời gian đóng phí bắt buộc là: ","options":["a. 5 năm Hợp Đồng đầu tiên","b. 3 năm Hợp Đồng đầu tiên","c. 4 năm Hợp Đồng đầu tiên","d. 2 năm Hợp Đồng đầu tiên"],"correct":2},{"id":39,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, quy định về việc BMBH được chủ động Chuyển đổi Quỹ đầu tư là như thế nào?","options":["a. BMBH được quyền Bán bớt một phần đơn vị quỹ của Quỹ này để đầu tư vào Quỹ khác mà không có ràng buộc gì khác","b. BMBH được quyền yêu cầu thay đổi một phần hoặc toàn bộ Giá Trị Các Đơn Vị Quỹ của Quỹ này sang (các)Quỹ khác theo giá của Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp sau ngày Prudential chấp thuận yêu cầu chuyển đổi Quỹ. Không được chuyển đổi giữa Giá Trị Tài Khoản Cơ Bản và Giá Trị Tài Khoản Đóng Thêm. Việc chuyển đổi Quỹ sẽ không bị tính phí, không áp dụng trong thời hạn cân nhắc và thời gian gia hạn đóng phí","c. BMBH được quyền yêu cầu thay đổi một phần hoặc toàn bộ giá trị quỹ từ Quỹ liên kết đơn vị này sang Quỹ liên kết đơn vị khác theo giá của Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp sau ngày Prudential chấp thuận yêu cầu. Được chuyển đổi giữa Giá Trị Tài Khoản Cơ Bản và Giá Trị Tài Khoản Đóng Thêm. Việc thay đổi này sẽ không tính phí và không áp dụng trong thời gian gia hạn đóng phí","d. BMBH được quyền yêu cầu thay đổi một phần hoặc toàn bộ giá trị quỹ từ Quỹ liên kết đơn vị này sang Quỹ liên kết đơn vị khác theo giá của Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp sau ngày Prudential chấp thuận yêu cầu. Được chuyển đổi giữa Giá Trị Tài Khoản Cơ Bản và Giá Trị Tài Khoản Đóng Thêm. Việc thay đổi này sẽ có áp dụng tính phí và không áp dụng trong thời gian gia hạn đóng phí"],"correct":1},{"id":40,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, phát biểu nào là đúng về Quyền đảm bảo gia tăng số tiền bảo hiểm của BMBH:  ","options":["a. Không có quy định cụ thể, tùy theo yêu cầu của khách hàng.","b. Được thực hiện nhiều lần trong suốt thời hạn HĐ, tùy theo khách hàng. Phí Bảo Hiểm Cơ Bản, Phí Rủi Ro sẽ được điều chỉnh tương ứng. ","c. Được thực hiện tối đa 3 lần trong suốt thời hạn HĐ. Phí Bảo Hiểm Cơ Bản, Phí Rủi Ro sẽ được điều chỉnh tương ứng. Áp dụng STBH mới từ Ngày kỷ niệm năm HĐ ngay sau ngày PVA chấp thuận yêu cầu","d. Được thực hiện tối đa 2 lần trong suốt thời gian có hiệu lực của HĐBH. Phí Bảo Hiểm Cơ Bản, Phí Rủi Ro sẽ được điều chỉnh tương ứng. Áp dụng STBH mới từ Ngày kỷ niệm năm HĐ ngay sau ngày PVA chấp thuận yêu cầu"],"correct":3},{"id":41,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, thời điểm hiệu lực khi BMBH yêu cầu chấm dứt hiệu lực BH Bán cùng?","options":["a. Yêu cầu chấm dứt hiệu lực của SP bán cùng có hiệu lực ngay khi Prudential chấp thuận yêu cầu","b. Yêu cầu chấm dứt hiệu lực của SP bán cùng có hiệu lực kể từ Ngày đến hạn đóng phí tiếp theo","c. Yêu cầu chấm dứt hiệu lực của SP bán cùng có hiệu lực kể từ Ngày BMBH nộp phiếu yêu cầu. ","d. Yêu cầu chấm dứt hiệu lực của SP bán cùng có hiệu lực vào ngày 31/12 của năm mà BMBH nộp phiếu yêu cầu"],"correct":1},{"id":42,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, Phí BH đóng thêm tối đa trong 1 năm hợp đồng là bao nhiêu?","options":["a. 5 lần Phí Bảo Hiểm Cơ Bản quy năm của năm HĐ hiện tại","b. 5 lần Phí Bảo Hiểm Cơ Bản quy năm của năm HĐ đầu tiên","c. 10 lần Phí Bảo Hiểm Cơ Bản quy năm của năm HĐ hiện tại","d. 10 lần Phí Bảo Hiểm Cơ Bản quy năm của năm HĐ đầu tiên"],"correct":0},{"id":43,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, BMBH cần tuân theo các quy định nào để có thể đóng thêm phí BH  Đóng Thêm: ","options":["a. Phí Bảo Hiểm Đóng Thêm tối thiểu trong mỗi lần yêu cầu là 2 triệu đồng và có thể đóng thêm phí BH trong giai đoạn linh hoạt đóng phí và","b. Phí Bảo Hiểm Đóng Thêm tối thiểu trong mỗi lần yêu cầu là 5 triệu đồng.","c. Đóng phí BH đóng thêm vào thời điểm đáo niên hợp đồng và Phí Bảo Hiểm Đóng Thêm tối thiểu trong mỗi lần yêu cầu là 2 triệu đồng. ","d. BMBH đóng đầy đủ (các) khoản Phí BHCB đến hạn; Phí Bảo Hiểm Đóng Thêm tối thiểu trong mỗi lần yêu cầu là 2 triệu đồng; BMBH gửi yêu cầu đóng thêm phí BHĐT (theo mẫu của Prudential)"],"correct":3},{"id":44,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, Quyền linh hoạt đóng phí BH Cơ Bản được áp dụng từ năm hợp đồng thứ mấy?","options":["a. Thứ 3 trở đi với điều kiện Hợp Đồng Bảo Hiểm còn hiệu lực và tại thời điểm bắt đầu linh hoạt đóng Phí Bảo Hiểm Cơ Bản, Giá Trị Tài Khoản Hợp Đồng còn đủ để trả Phí Rủi Ro và Phí Quản Lý Hợp Đồng theo quy định","b. Thứ 4 trở đi với điều kiện Hợp Đồng Bảo Hiểm còn hiệu lực và tại thời điểm bắt đầu linh hoạt đóng Phí Bảo Hiểm Cơ Bản, Giá Trị Tài Khoản Hợp Đồng còn đủ để trả Phí Rủi Ro và Phí Quản Lý Hợp Đồng theo quy định","c. Thứ 5 trở đi với điều kiện Hợp Đồng Bảo Hiểm còn hiệu lực và tại thời điểm bắt đầu linh hoạt đóng Phí Bảo Hiểm Cơ Bản, Giá Trị Tài Khoản Hợp Đồng còn đủ để trả Phí Rủi Ro và Phí Quản Lý Hợp Đồng theo quy định","d. Thứ 6 trở đi với điều kiện Hợp Đồng Bảo Hiểm còn hiệu lực và tại thời điểm bắt đầu linh hoạt đóng Phí Bảo Hiểm Cơ Bản, Giá Trị Tài Khoản Hợp Đồng còn đủ để trả Phí Rủi Ro và Phí Quản Lý Hợp Đồng theo quy định"],"correct":2},{"id":45,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, phát biểu nào sau đây là đúng về Quyền linh hoạt đóng phí: ","options":["a. BMBH có quyền đóng một phần hoặc tạm ngưng đóng phí BH cơ bản khi HĐ còn hiệu lực và GTTKCB đủ chi trả cho Phí rủi ro và Phí quản lý hợp đồng","b. BMBH có quyền đóng một phần hoặc tạm ngưng đóng phí BH cơ bản từ năm HĐ thứ 5 khi HĐ còn hiệu lực, tại thời điểm bắt đầu linh hoạt đóng Phí BHCB, GTTKHĐ đủ chi trả cho Phí rủi ro và Phí quản lý hợp đồng","c. BMBH có quyền đóng một phần hoặc tạm ngưng đóng phí BH cơ bản khi HĐ trong giai đoạn linh hoạt đóng phí và GTTKCB đủ chi trả cho Phí rủi ro và Phí quản lý hợp đồng","d. BMBH có quyền đóng một phần phí BH cơ bản khi HĐ còn hiệu lực và GTTKCB đủ chi trả cho Phí rủi ro và Phí quản lý hợp đồng"],"correct":1},{"id":46,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, phát biểu nào sau đây về Quyền rút một phần GTTKHĐ là đúng:","options":["a. Khách hàng rút tiền từ tài khoản cơ bản trước. ","b. Khách hàng sẽ được khấu trừ phí rút tiền là 0,5% cho mỗi lần yêu cầu rút tiền.","c. Khách hàng sẽ được rút tiền từ tài khoản đóng thêm trước, rồi mới đến tài khoản cơ bản và không áp dụng phí rút tiền ","d. Khách hàng sẽ được rút tiền từ tài khoản đóng thêm trước, phí rút tiền là 0,5%"],"correct":2},{"id":47,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, phát biểu nào sau đây là đúng về Quyền rút một phần GTTKHĐ: ","options":["a. Khi nhận được yêu cầu rút tiền hợp lệ, Prudential sẽ bán Đơn Vị Quỹ từ (các) Quỹ theo chỉ định của Bên Mua Bảo Hiểm và theo Giá Đơn Vị Quỹ tại Ngày Định Giá kế tiếp sau khi yêu cầu được chấp thuận","b. Được yêu cầu rút từ năm HĐ thứ 4 khi rút tiền từ GTTKCB","c. Không áp dụng trong thời gian gia hạn đóng phí BH khi rút một phần GTTKCB","d. a, b, c đúng"],"correct":3},{"id":48,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi áp dụng quyền rút tiền từ GTTKCB, số tiền tối thiểu còn lại trong tài khoản cơ bản sau khi rút phải là: ","options":["a. Giá trị nhỏ hơn giữa (100% Phí BH cơ bản năm đầu và 20 triệu đồng) vào năm HĐ thứ 4, thứ 5. ","b. 5 triệu đồng từ năm thứ 6","c. a và b đúng ","d. Không có câu đúng"],"correct":2},{"id":49,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khách hàng 71 tuổi và có yêu cầu rút tiền từ GTTKCB.  Lúc này, hợp đồng đang có STBH là 1 tỷ đồng, GTTKCB là 1,2 tỷ đồng. BMBH yêu cầu rút ra 300 triệu đồng. Hỏi sau khi rút tiền, STBH của hợp đồng còn bao nhiêu?","options":["a. 1 tỷ đồng","b. 900 triệu đồng","c. 800 triệu đồng","d. 700 triệu đồng"],"correct":1},{"id":50,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi BMBH yêu cầu chấm dứt HĐ BH trước hạn, BMBH sẽ nhận được: ","options":["a. Giá trị hoàn lại của hợp đồng","b. Giá trị tài khoản hợp đồng","c. Giá trị tài khoản đóng thêm ","d. Không nhận được gì"],"correct":0},{"id":51,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, Giá trị hoàn lại BMBH nhận được (sau khi khấu trừ (các) Khoản Nợ, nếu có) khi yêu cầu chấm dứt HĐ BH trước hạn là:","options":["a. GTTKCB + GTTKĐT, nếu có – (các) khoản nợ, nếu có","b. (GTTKCB – phí chấm dứt HĐ trước hạn) + GTTKĐT, nếu có","c. (GTTKCB – phí chấm dứt HĐ trước hạn) + GTTKĐT, nếu có ","d. GTTKCB + GTTKĐT, nếu có – (các) khoản nợ, nếu có"],"correct":1},{"id":52,"q":"BMBH có quyền chuyển giao giá trị tích lũy cho NĐBH mới bằng việc tham gia HĐBH mới khi: ","options":["a. HĐBH còn hiệu lực; Bên Mua Bảo Hiểm và Người Được Bảo Hiểm mới phải có quyền lợi có thể được bảo hiểm, đáp ứng mọi điều kiện theo quy định hiện hành.","b. Có sự đồng ý bằng văn bản của NĐBH mới hoặc người đại diện theo pháp luật của  NĐBH mới.","c. Bắt đầu từ ngày Kỷ Niệm Năm Hợp Đồng kế tiếp sau ngày Người Được Bảo Hiểm đạt đủ 60 tuổi hoặc Ngày Kỷ Niệm Năm Hợp Đồng thứ 20, tùy ngày nào đến sau.","d. a, b, c "],"correct":3},{"id":53,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, hãy chọn câu trả lời đúng đối với Quyền lợi bảo hiểm tử vong đối với NĐBH ở độ tuổi từ 1 tuổi đến dưới 2 tuổi? ","options":["a. 25% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","b. 75% STBH + GTTKCB - Các khoản rút tiền kể từ ngày NĐBH tử vong và (các) Khoản Nợ, nếu có.","c. 100% STBH + GTTKHĐ - Các khoản rút tiền kể từ ngày NĐBH tử vong nếu có.","d. Không chi trả."],"correct":0},{"id":54,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, phát biểu nào về mức chi trả tối đa cho QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm là đúng? ","options":["a. Mức chi trả tối đa cho QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm là 100 triệu đồng  - tính trên 1 HĐBH PRU - Đầu Tư Vững Tiến và trên tất cả các HĐBH có cùng QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm với cùng 1 NĐBH","b. Mức chi trả tối đa cho QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm là 100% STBH  - tính trên 1 HĐBH PRU - Đầu Tư Vững Tiến và trên tất cả các HĐBH có cùng QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm với cùng 1 NĐBH","c. Mức chi trả tối đa cho QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm là 10% STBH  - tính trên 1 HĐBH PRU - Đầu Tư Vững Tiến và trên tất cả các HĐBH có cùng QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm với cùng 1 NĐBH","d. Mức chi trả tối đa cho QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm là 10% GTTKHĐ  - tính trên 1 HĐBH PRU - Đầu Tư Vững Tiến và trên tất cả các HĐBH có cùng QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm với cùng 1 NĐBH"],"correct":0},{"id":55,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi chi trả quyền lợi Tử vong, Giá Trị Tài Khoản Cơ Bản và Giá Trị Tài Khoản Đóng Thêm được Prudential xác định dựa trên","options":["a. Số lượng Đơn Vị Quỹ tại ngày NĐBH tử vong; và Giá Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp ngay sau ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm Tử Vong","b. Số lượng Đơn Vị Quỹ tại ngày NĐBH tử vong; và Giá Đơn Vị Quỹ tại ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm Tử Vong","c. Số lượng Đơn Vị Quỹ tại ngày NĐBH tử vong; và Giá Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp ngay sau ngày NĐBH tử vong","d. Số lượng Đơn Vị Quỹ tại ngày NĐBH tử vong; và Giá Đơn Vị Quỹ tại ngày NĐBH tử vong"],"correct":0},{"id":56,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi chi trả quyền lợi TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm , Giá Trị Tài Khoản Cơ Bản và Giá Trị Tài Khoản Đóng Thêm được Prudential xác định dựa trên","options":["a. Số lượng Đơn Vị Quỹ và Giá Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp ngay sau ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm","b. Số lượng Đơn Vị Quỹ tại ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm; và Giá Đơn Vị Quỹ tại ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm","c. Số lượng Đơn Vị Quỹ tại ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm; và Giá Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp ngay sau ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm","d. Số lượng Đơn Vị Quỹ tại ngày NĐBH được chứng nhận bị TTTBVV; và Giá Đơn Vị Quỹ tại Ngày Định Giá Kế Tiếp ngay sau ngày NĐBH được chứng nhận bị TTTBVV"],"correct":0},{"id":57,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi chi trả quyền lợi TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm , Số Tiền Bảo Hiểm được Prudential xác định tại","options":["a. Ngày Người Được Bảo Hiểm được chứng nhận bị TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm","b. ngày Prudential chấp thuận chi trả quyền lợi bảo hiểm","c. ngày hiệu lực HĐBH","d. ngày Prudential nhận được yêu cầu chi trả QLBH"],"correct":0},{"id":58,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi chi trả quyền lợi đáo hạn, Giá Trị Tài Khoản Cơ Bản và Giá Trị Tài Khoản Đóng Thêm được Prudential xác định tại","options":["a. Số lượng đơn vị quỹ tại ngày đáo hạn hợp đồng; và Giá Đơn Vị Quỹ tại Ngày định giá kế tiếp ngay sau Ngày đáo hạn hợp đồng","b. Số lượng đơn vị quỹ tại ngày đáo hạn hợp đồng; và Giá Đơn Vị Quỹ tại ngày đáo hạn hợp đồng","c. Số lượng đơn vị quỹ tại Ngày Định Giá kế tiếp ngay sau Ngày đáo hạn hợp đồng và Giá Đơn Vị Quỹ tại Ngày định giá kế tiếp ngay sau Ngày đáo hạn hợp đồng","d. Số lượng đơn vị quỹ tại Ngày Định Giá kế tiếp ngay sau Ngày đáo hạn hợp đồng và Giá Đơn Vị Quỹ tại ngày đáo hạn hợp đồng"],"correct":0},{"id":59,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi NĐBH từ 1 tuổi tới dưới 71 tuổi, ngay sau khi QLBH TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm được chấp thuận chi trả, Hợp Đồng Bảo Hiểm sẽ:","options":["a. Vẫn duy trì hiệu lực hợp đồng. NĐBH được tiếp tục bảo vệ trước rủi ro Tử Vong, TTTBVV Do Ung Thư Tuyến Giáp Giai Đoạn Sớm và/hoặc TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm","b. Chấm dứt bảo hiểm các sản phẩm Bán cùng.","c. Tiếp tục có hiệu lực và Người Được Bảo Hiểm được tiếp tục bảo vệ cho Quyền Lợi Bảo Hiểm TTTBVV Không Do Ung Thư Tuyến Giáp Giai Đoạn Sớm hoặc Quyền Lợi Bảo Hiểm Tử Vong","d. Chấm dứt hiệu lực."],"correct":2},{"id":60,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, QLBH TTTBVV sẽ kết thúc vào Ngày Kỷ Niệm Năm Hợp Đồng ngay sau sinh nhật lần thứ bao nhiêu của NĐBH?","options":["a. 71","b. 70","c. 80","d. 100"],"correct":0},{"id":61,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, TTTBVV do mất/liệt hoàn toàn bộ phận cơ thể được định nghĩa là \"Người được bảo hiểm bị mất hoàn toàn, hoặc liệt hoàn toàn và không thể phục hồi được chức năng của...\":","options":["a. Hai tay hoặc Hai chân","b. Một tay và một chân; hoặc Hai mắt","c. Một tay và một mắt; hoặc Một chân và một mắt","d. a, b, c "],"correct":3},{"id":62,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, TTTBVV do tổn thương cơ thể được định nghĩa là:","options":["a. Người được bảo hiểm bị tổn thương cơ thể từ 81% trở lên theo xác nhận của xác nhận của cơ quan y tế hoặc Hội đồng giám định Y khoa cấp tỉnh, thành phố trực thuộc Trung ương hoặc tổ chức giám định y tế hợp pháp được Prudential chấp thuận","b. Người được bảo hiểm bị tổn thương cơ thể từ 71% trở lên theo xác nhận của xác nhận của cơ quan y tế hoặc Hội đồng giám định Y khoa cấp tỉnh, thành phố trực thuộc Trung ương hoặc tổ chức giám định y tế hợp pháp được Prudential chấp thuận","c. Người được bảo hiểm bị tổn thương cơ thể từ 80% trở lên theo xác nhận của xác nhận của cơ quan y tế hoặc Hội đồng giám định Y khoa cấp tỉnh, thành phố trực thuộc Trung ương hoặc tổ chức giám định y tế hợp pháp được Prudential chấp thuận","d. Người được bảo hiểm bị tổn thương cơ thể từ 90% trở lên theo xác nhận của xác nhận của cơ quan y tế hoặc Hội đồng giám định Y khoa cấp tỉnh, thành phố trực thuộc Trung ương hoặc tổ chức giám định y tế hợp pháp được Prudential chấp thuận"],"correct":0},{"id":63,"q":"Đối với sản phẩm PRU-ĐẦU TƯ VỮNG TIẾN, khi thực hiện quyền chuyển giao Giá Trị TKHĐ sang HĐBH mới có NĐBH mới, BMBH và NĐBH mới cần:","options":["a. Có quyền lợi có thể được bảo hiểm","b. Đáp ứng mọi điều kiện để được bảo hiểm theo Quy Tắc và Điều Khoản Sản Phẩm Bảo Hiểm Chính","c. Đáp ứng quy định thẩm định hiện hành của Prudential và phù hợp với quy định của pháp luật tại thời điểm thay đổi","d. Cả a, b, c"],"correct":0}];
+    const EXCEL_TOPIC_POOLS = {"1":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,22,23,24,53,54,55,56,57,59,60,61,62],"2":[25,33,34,37,38,39,42,43],"3":[26,27,28,35,44,45,50,51,58],"4":[20,29,30,31,32,36,40,41,46,47,48,49,52,63]};
+    const EXCEL_TOPIC_NAMES = {1:'An tâm trọn vẹn',2:'Đầu tư tin cậy',3:'Tích lũy tài sản',4:'Vẹn toàn trao gửi'};
+    const EXCEL_BY_ID = new Map(EXCEL_QUESTION_BANK.map(q=>[q.id,q]));
+    function randomSample(items, count) {
+      const copy = [...items];
+      for (let i=copy.length-1;i>0;i--) {
+        const j=Math.floor(Math.random()*(i+1));
+        [copy[i],copy[j]]=[copy[j],copy[i]];
+      }
+      return copy.slice(0,count);
+    }
+    function buildMiniQuiz(sectionId) {
+      const questions = randomSample(EXCEL_TOPIC_POOLS[sectionId],3).map(id=>EXCEL_BY_ID.get(id));
+      const root=document.createElement('div');root.className='pru-excel-mini';
+      const heading=document.createElement('div');heading.className='pru-excel-mini-heading';
+      heading.textContent=`MINI QUIZ • ${EXCEL_TOPIC_NAMES[sectionId]} • 3 CÂU`;
+      root.append(heading);
+      const result=document.createElement('div');result.className='pru-excel-mini-result';
+      let answered=0,score=0;
+      questions.forEach((q,index)=>{
+        const card=document.createElement('section');card.className='pru-excel-question';
+        const title=document.createElement('h4');title.className='pru-excel-question-title';
+        title.textContent=`Câu ${index+1}. ${q.q}`;card.append(title);
+        const choices=document.createElement('div');choices.className='pru-excel-options';
+        const feedback=document.createElement('div');feedback.className='pru-excel-feedback';
+        q.options.forEach((opt,idx)=>{
+          const button=document.createElement('button');button.type='button';button.className='pru-excel-option';
+          button.textContent=opt;button.addEventListener('click',()=>{
+            if(card.dataset.answered)return;
+            card.dataset.answered='1';answered++;
+            const correct=idx===q.correct;
+            if(correct)score++;
+            if(typeof playSoundEffect==='function')playSoundEffect(correct?'correct':'wrong');
+            [...choices.children].forEach((btn,n)=>{
+              btn.disabled=true;
+              if(n===q.correct)btn.classList.add('pru-answer-correct');
+              else if(n===idx)btn.classList.add('pru-answer-wrong');
+            });
+            feedback.textContent=correct?'✓ Chính xác!':'Chưa chính xác. Đáp án đúng: '+q.options[q.correct];
+            feedback.classList.add('pru-excel-feedback-visible');
+            if(answered===questions.length)result.textContent=`Kết quả Mini Quiz: ${score}/${questions.length} câu đúng.`;
+          });choices.append(button);
+        });
+        card.append(choices,feedback);root.append(card);
+      });
+      root.append(result);
+      return root;
+    }
+    function mountMiniQuiz(sectionId) {
+      const target=document.getElementById('miniQuizBody');
+      target.replaceChildren(buildMiniQuiz(sectionId));
+    }
 
     /* ================= 5. MODAL CONTROL LOGIC ================= */
     let currentModalSectionId = 1;
@@ -2217,7 +2162,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
       document.getElementById('modalHeaderTitle').innerText = data.title;
       document.getElementById('modalHeaderTag').innerText = data.tag;
       document.getElementById('infographicBody').innerHTML = data.contentHtml;
-      document.getElementById('miniQuizBody').innerHTML = MINI_QUIZ_TEMPLATES[sectionId];
+      mountMiniQuiz(sectionId);
 
       switchInfographicTab('theory');
 
@@ -2278,221 +2223,21 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
     }
 
     // Mini Quiz Event Handlers
-    function answerMiniQuiz(section, qIndex, selectedVal, btn) {
-      if (section === 1) {
-        if (qIndex === 1) {
-          const fb = document.getElementById('mq1_1_feedback');
-          fb.classList.remove('hidden');
-          if (selectedVal === 1) {
-            playSoundEffect('correct');
-            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 font-bold text-emerald-800";
-            fb.innerHTML = "<span class='text-emerald-700'>✓ Hoàn toàn chính xác! 30 ngày tuổi – 70 tuổi (Slide 05).</span>";
-          } else {
-            playSoundEffect('wrong');
-            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-red-500 bg-red-50 font-bold text-red-800";
-            fb.innerHTML = "<span class='text-red-600'>✗ Chưa chính xác. Vui lòng chọn lại.</span>";
-          }
-        } else if (qIndex === 2) {
-          const fb = document.getElementById('mq1_2_feedback');
-          fb.classList.remove('hidden');
-          if (selectedVal === 1) {
-            playSoundEffect('correct');
-            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 font-bold text-emerald-800";
-            fb.innerHTML = "<span class='text-emerald-700'>✓ Chính xác! Chi trả số nhỏ hơn giữa 10% STBH và 100tr, HĐ vẫn tiếp tục hiệu lực.</span>";
-            triggerConfettiSmall();
-          } else {
-            playSoundEffect('wrong');
-            btn.className = "w-full text-left p-2.5 rounded-lg border-2 border-red-500 bg-red-50 font-bold text-red-800";
-            fb.innerHTML = "<span class='text-red-600'>✗ Chưa chính xác.</span>";
-          }
-        }
-      } else if (section === 3) {
-        if (qIndex === 1) {
-          const fb = document.getElementById('mq3_1_feedback');
-          fb.classList.remove('hidden');
-          if (selectedVal === '150% Phí Cơ Bản năm đầu') {
-            playSoundEffect('correct');
-            btn.className = "p-2 rounded border-2 border-emerald-500 bg-emerald-50 font-black text-emerald-800";
-            fb.innerHTML = "<span class='text-emerald-700'>✓ Chính xác! Năm thứ 10 là 150% Phí Cơ Bản năm đầu (Slide 11).</span>";
-          } else {
-            playSoundEffect('wrong');
-            btn.className = "p-2 rounded border-2 border-red-500 bg-red-50 font-black text-red-800";
-          }
-        } else if (qIndex === 2) {
-          const fb = document.getElementById('mq3_2_feedback');
-          fb.classList.remove('hidden');
-          if (selectedVal === '100%') {
-            playSoundEffect('correct');
-            btn.className = "p-2 rounded border-2 border-emerald-500 bg-emerald-50 font-black text-emerald-800";
-            fb.innerHTML = "<span class='text-emerald-700'>✓ Chính xác! 100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp.</span>";
-            triggerConfettiSmall();
-          } else {
-            playSoundEffect('wrong');
-            btn.className = "p-2 rounded border-2 border-red-500 bg-red-50 font-black text-red-800";
-          }
-        }
-      }
-    }
-
-    // Mini Fund Matching Section 2
-    let selectedFundA = null, selectedFundB = null, matchedFundCount = 0;
-    function selectFundPair(col, fundId, el) {
-      playSoundEffect('swipe');
-      if (col === 'L') {
-        document.querySelectorAll('#mqFundColLeft > div').forEach(d => d.classList.remove('border-sky-500', 'bg-sky-50'));
-        el.classList.add('border-sky-500', 'bg-sky-50');
-        selectedFundA = { id: fundId, el };
-      } else {
-        document.querySelectorAll('#mqFundColRight > div').forEach(d => d.classList.remove('border-sky-500', 'bg-sky-50'));
-        el.classList.add('border-sky-500', 'bg-sky-50');
-        selectedFundB = { id: fundId, el };
-      }
-
-      if (selectedFundA && selectedFundB) {
-        if (selectedFundA.id === selectedFundB.id) {
-          playSoundEffect('correct');
-          selectedFundA.el.className = "p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 text-emerald-900 pointer-events-none";
-          selectedFundB.el.className = "p-3 rounded-xl bg-emerald-50 border-2 border-emerald-500 text-emerald-900 pointer-events-none";
-          matchedFundCount++;
-          document.getElementById('mqFundCount').innerText = matchedFundCount;
-          selectedFundA = null;
-          selectedFundB = null;
-
-          if (matchedFundCount === 2) {
-            playSoundEffect('fanfare');
-            triggerConfettiSmall();
-          }
-        } else {
-          playSoundEffect('wrong');
-          const eA = selectedFundA.el;
-          const eB = selectedFundB.el;
-          eA.classList.add('border-red-500', 'bg-red-50');
-          eB.classList.add('border-red-500', 'bg-red-50');
-          setTimeout(() => {
-            eA.classList.remove('border-red-500', 'bg-red-50', 'border-sky-500', 'bg-sky-50');
-            eB.classList.remove('border-red-500', 'bg-red-50', 'border-sky-500', 'bg-sky-50');
-          }, 600);
-          selectedFundA = null;
-          selectedFundB = null;
-        }
-      }
-    }
-
-    // Mini True/False Section 4
-    function answerTF(qIdx, val, btn) {
-      const parent = btn.parentElement;
-      parent.querySelectorAll('button').forEach(b => b.className = "px-3 py-1 rounded border font-bold");
-      if (val === true) {
-        playSoundEffect('correct');
-        btn.className = "px-3 py-1 rounded border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-black";
-        document.getElementById('mq4_feedback').innerHTML = "<span class='text-emerald-700'>✓ Hoàn toàn chính xác theo nguyên văn Slide 12 & 13!</span>";
-        triggerConfettiSmall();
-      } else {
-        playSoundEffect('wrong');
-        btn.className = "px-3 py-1 rounded border-2 border-red-500 bg-red-50 text-red-800 font-black";
-        document.getElementById('mq4_feedback').innerHTML = "<span class='text-red-600'>✗ Nhận định này là ĐÚNG theo quy tắc sản phẩm.</span>";
-      }
-    }
-
     /* ================= 6. GRAND REVIEW GAME (8 ẢI NGUYÊN VĂN SLIDE 4 - 7) ================= */
-    const GRAND_QUESTIONS = [
-      {
-        cat: "SLIDE 04 & 05: ĐIỀU KIỆN THAM GIA",
-        q: "Theo Slide 05, thời hạn đóng phí bắt buộc của sản phẩm PRU-Đầu Tư Vững Tiến là bao nhiêu năm?",
-        options: [
-          "A. 1 năm đầu tiên",
-          "B. 4 năm (BMBH có thể linh hoạt đóng phí từ Năm HĐ thứ 5)",
-          "C. Bắt buộc đóng đủ suốt thời hạn hợp đồng",
-          "D. 10 năm bắt buộc"
-        ],
-        correct: 1,
-        explain: "Chính xác! Phí Bảo Hiểm Cơ Bản phải được đóng đầy đủ và đúng hạn trong thời hạn đóng phí bắt buộc là 4 năm. Khách hàng có thể linh hoạt đóng phí từ Năm HĐ thứ 5 (Slide 05)."
-      },
-      {
-        cat: "SLIDE 06 & 07: QUYỀN LỢI RỦI RO",
-        q: "Công thức chi trả Quyền lợi Bảo hiểm Tử vong và Quyền lợi TTTBVV Không Do UTTG Giai Đoạn Sớm là gì?",
-        options: [
-          "A. 100% Số Tiền Bảo Hiểm + Giá Trị Tài Khoản Cơ Bản + Giá Trị Tài Khoản Đóng Thêm (nếu có)",
-          "B. 110% Số Tiền Bảo Hiểm trừ đi Phí Quản Lý Hợp Đồng",
-          "C. Chỉ nhận lại Giá Trị Tài Khoản Cơ Bản",
-          "D. Giá trị lớn hơn giữa 100% STBH và GTTKCB"
-        ],
-        correct: 0,
-        explain: "Chính xác! Chi trả 100% STBH + GTTKCB + GTTKĐT (nếu có) sau khi trừ đi các khoản rút tiền từ ngày có Sự Kiện Bảo Hiểm và nợ nếu có (Slide 06 & 07)."
-      },
-      {
-        cat: "SLIDE 07: CHUYỂN ĐỔI SAU TUỔI 71",
-        q: "Vào Ngày Kỷ Niệm Năm HĐ ngay sau sinh nhật lần thứ 71 của NĐBH, Quyền Lợi Bảo Hiểm Tử Vong tự động chuyển đổi thế nào?",
-        options: [
-          "A. Chấm dứt ngay quyền lợi bảo hiểm tử vong",
-          "B. Tự động chuyển về Giá trị lớn hơn giữa 100% STBH và Giá Trị Tài Khoản Cơ Bản, sau đó cộng với GTTKĐT (nếu có)",
-          "C. Tăng gấp đôi Số Tiền Bảo Hiểm",
-          "D. Giữ nguyên không có bất kỳ thay đổi nào"
-        ],
-        correct: 1,
-        explain: "Chính xác theo chú thích (2) Slide 07: Tự động chuyển về Giá trị lớn hơn giữa 100% STBH và GTTKCB, sau đó cộng với GTTKĐT (nếu có)."
-      },
-      {
-        cat: "SLIDE 08: ĐẦU TƯ TRÁCH NHIỆM",
-        q: "Eastspring Việt Nam hiện đang quản lý tổng tài sản trên bao nhiêu (tính đến ngày 31/03/2026)?",
-        options: [
-          "A. Trên 50 nghìn tỷ đồng",
-          "B. Trên 100 nghìn tỷ đồng",
-          "C. Trên 175,7 nghìn tỷ đồng (tương đương 6,6 tỷ USD)",
-          "D. Trên 250 nghìn tỷ đồng"
-        ],
-        correct: 2,
-        explain: "Chính xác! Eastspring Việt Nam hiện đang quản lý tổng tài sản trên 175,7 nghìn tỷ đồng (~6,6 tỷ USD) tính đến 31/03/2026 (Slide 08)."
-      },
-      {
-        cat: "SLIDE 09: BẢNG TỶ SUẤT CÁC QUỸ",
-        q: "Quỹ PRUlink Cổ Phiếu Việt Nam đạt lợi nhuận bình quân 10 năm gần nhất (2016-2025) là bao nhiêu %?",
-        options: [
-          "A. 7,2%",
-          "B. 10,7%",
-          "C. 13,1%",
-          "D. 11,9%"
-        ],
-        correct: 2,
-        explain: "Chính xác! Theo Bảng tỷ suất Slide 09, LNBQ 10 năm gần nhất của Quỹ PRUlink Cổ Phiếu Việt Nam đạt 13,1%."
-      },
-      {
-        cat: "SLIDE 11: THƯỞNG TĂNG TRƯỞNG",
-        q: "Tỷ lệ Thưởng Tăng Trưởng chi trả vào Ngày Kỷ Niệm Năm HĐ thứ 10, 15, 20 lần lượt là bao nhiêu % Phí Cơ Bản năm đầu?",
-        options: [
-          "A. 100%, 50%, 50%",
-          "B. 150%, 75%, 75% (Tổng lên đến 300%)",
-          "C. 50%, 25%, 25%",
-          "D. 200%, 50%, 50%"
-        ],
-        correct: 1,
-        explain: "Chính xác! Thưởng Tăng Trưởng chi trả tại Năm thứ 10: 150%, Năm thứ 15: 75%, Năm thứ 20: 75% Phí Cơ Bản năm đầu (Slide 11)."
-      },
-      {
-        cat: "SLIDE 11: ĐÁO HẠN HỢP ĐỒNG",
-        q: "Theo Slide 11, Quyền Lợi Đáo Hạn Hợp Đồng được chi trả như thế nào?",
-        options: [
-          "A. 100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng",
-          "B. 100% Số Tiền Bảo Hiểm",
-          "C. Hoàn trả tổng số phí bảo hiểm đã đóng",
-          "D. 50% GTTKHĐ cộng thưởng tích lũy"
-        ],
-        correct: 0,
-        explain: "Chính xác theo nguyên văn Slide 11: 100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng."
-      },
-      {
-        cat: "SLIDE 12: ĐẶC QUYỀN CHUYỂN GIAO",
-        q: "BMBH có thể thực hiện quyền chuyển giao giá trị tích lũy sang HĐ mới từ khi nào?",
-        options: [
-          "A. NĐBH hiện tại đạt 50 tuổi trở lên",
-          "B. Khi NĐBH hiện tại đạt 60 tuổi trở lên HOẶC từ Ngày Kỷ Niệm Năm HĐ thứ 20, tùy ngày nào đến sau",
-          "C. Bất kỳ lúc nào sau 5 năm đóng phí",
-          "D. Chỉ khi hợp đồng đáo hạn ở tuổi 99"
-        ],
-        correct: 1,
-        explain: "Chính xác theo nguyên văn Slide 12: từ khi NĐBH hiện tại đạt 60 tuổi trở lên hoặc từ Ngày Kỷ Niệm Năm Hợp Đồng thứ 20, tùy ngày nào đến sau."
+    let GRAND_QUESTIONS = [];
+    function createGrandGameQuestions() {
+      // 5 câu ngẫu nhiên từ mỗi phần, sau đó xáo thứ tự 20 câu.
+      const picked=[];
+      for(let section=1;section<=4;section++) {
+        randomSample(EXCEL_TOPIC_POOLS[section],5).forEach(id=>{
+          const source=EXCEL_BY_ID.get(id);
+          picked.push({cat:EXCEL_TOPIC_NAMES[section],q:source.q,
+            options:[...source.options],correct:source.correct,
+            explain:'Đáp án đúng: '+source.options[source.correct],sourceId:source.id});
+        });
       }
-    ];
+      GRAND_QUESTIONS=randomSample(picked,picked.length);
+    }
 
     let grandGameIndex = 0;
     let grandGameScore = 0;
@@ -2522,6 +2267,7 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
 
     function startGrandGame() {
       playSoundEffect('swipe');
+      createGrandGameQuestions();
       grandGameIndex = 0;
       grandGameScore = 0;
       document.getElementById('gameCurrentScore').innerText = '0';
@@ -2554,8 +2300,9 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
 
       qData.options.forEach((optText, idx) => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-xs sm:text-sm font-semibold text-[#505565] transition duration-150";
-        btn.innerText = optText;
+        btn.className = "pru-answer-option w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-xs sm:text-sm font-semibold text-white transition duration-150";
+        btn.innerHTML = `<span class="pru-answer-letter">${String.fromCharCode(65 + idx)}</span><span class="pru-answer-copy"></span><span class="pru-answer-status" aria-hidden="true"></span>`;
+        btn.querySelector('.pru-answer-copy').textContent = optText;
         btn.onclick = () => selectGrandAnswer(idx, btn);
         container.appendChild(btn);
       });
@@ -2575,14 +2322,17 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         playSoundEffect('correct');
         grandGameScore += 100;
         document.getElementById('gameCurrentScore').innerText = grandGameScore;
-        btnElement.className = "w-full text-left p-4 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-xs sm:text-sm font-bold text-[#505565]";
-        fbBox.className = "p-4 rounded-xl text-xs font-semibold leading-relaxed border bg-emerald-950/60 border-emerald-500 text-[#505565]";
+        btnElement.className = "pru-answer-option pru-answer-correct w-full text-left p-4 rounded-xl bg-emerald-950/80 border-2 border-emerald-500 text-xs sm:text-sm font-bold text-white";
+        btnElement.querySelector('.pru-answer-status').textContent = '✓';
+        fbBox.className = "p-4 rounded-xl text-xs font-semibold leading-relaxed border bg-emerald-950/60 border-emerald-500 text-white";
         fbBox.innerHTML = `✓ <b>CHÍNH XÁC!</b> ${qData.explain}`;
       } else {
         playSoundEffect('wrong');
-        btnElement.className = "w-full text-left p-4 rounded-xl bg-red-950/80 border-2 border-red-500 text-xs sm:text-sm font-bold text-[#505565]";
-        allBtns[qData.correct].className = "w-full text-left p-4 rounded-xl bg-emerald-950/60 border-2 border-emerald-500 text-xs sm:text-sm font-bold text-[#505565]";
-        fbBox.className = "p-4 rounded-xl text-xs font-semibold leading-relaxed border bg-red-950/60 border-red-500 text-[#505565]";
+        btnElement.className = "pru-answer-option pru-answer-wrong w-full text-left p-4 rounded-xl bg-red-950/80 border-2 border-red-500 text-xs sm:text-sm font-bold text-white";
+        btnElement.querySelector('.pru-answer-status').textContent = '✕';
+        allBtns[qData.correct].className = "pru-answer-option pru-answer-correct w-full text-left p-4 rounded-xl bg-emerald-950/60 border-2 border-emerald-500 text-xs sm:text-sm font-bold text-white";
+        allBtns[qData.correct].querySelector('.pru-answer-status').textContent = '✓';
+        fbBox.className = "p-4 rounded-xl text-xs font-semibold leading-relaxed border bg-red-950/60 border-red-500 text-white";
         fbBox.innerHTML = `✗ <b>CHƯA ĐÚNG!</b> ${qData.explain}`;
       }
 
@@ -2605,11 +2355,11 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         triggerConfettiGrand();
 
         const correctCount = grandGameScore / 100;
-        document.getElementById('gameFinalScoreText').innerText = `Bạn đã trả lời đúng ${correctCount}/8 câu hỏi nguyên văn theo Brochure PRU-Đầu Tư Vững Tiến!`;
+        document.getElementById('gameFinalScoreText').innerText = `Bạn đã trả lời đúng ${correctCount}/${GRAND_QUESTIONS.length} câu hỏi từ ngân hàng Excel!`;
 
         let rank = "Bậc Thầy PRU Vững Tiến 👑";
-        if (correctCount < 5) rank = "Chuyên Viên Tiềm Năng 🛡️";
-        else if (correctCount < 8) rank = "Chuyên Gia Tài Chính Vững Lái 🌟";
+        if (correctCount < 12) rank = "Chuyên Viên Tiềm Năng 🛡️";
+        else if (correctCount < 18) rank = "Chuyên Gia Tài Chính Vững Lái 🌟";
         document.getElementById('gameResultRank').innerText = rank;
       }
     }
