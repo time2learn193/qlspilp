@@ -811,36 +811,70 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
 @media(max-width:640px){.pru-discovery-trigger{grid-template-columns:32px minmax(0,1fr) 38px!important}.pru-discovery-chevron{grid-column:3!important;grid-row:1 / span 2!important;width:36px!important;height:36px!important}}
 @media(max-width:360px){.pru-discovery-trigger{grid-template-columns:28px minmax(0,1fr) 34px!important}.pru-discovery-chevron{width:34px!important;height:34px!important}}
 @media(prefers-reduced-motion:reduce){.pru-discovery-chevron svg{transition:none!important}}
+
+/* ===== FINAL CONTENT SPACING + MOBILE TAB AUTO-SCROLL ===== */
+.pru-page{padding-top:clamp(12px,2.2vh,24px)!important}
+.pru-dashboard{padding-top:clamp(10px,1.4vw,16px)!important}
+.pru-tabs{scroll-behavior:smooth;scroll-padding-inline:16px}
+.pru-inline-learning{padding-top:clamp(22px,3vw,34px)!important;margin-top:clamp(22px,3vw,34px)!important}
+.pru-inline-learning #infographicModal > div{display:flex!important;flex-direction:column!important;gap:0!important}
+.pru-inline-learning #infographicBody,
+.pru-inline-learning #miniQuizBody{padding-top:clamp(18px,2.5vw,28px)!important;padding-bottom:clamp(24px,3vw,38px)!important}
+.pru-inline-learning #miniQuizBody > * + *{margin-top:clamp(16px,2vw,24px)!important}
+.pru-inline-learning #infographicBody > * + *{margin-top:clamp(14px,2vw,22px)!important}
+.pru-inline-learning #modalScrollArea{padding-bottom:clamp(18px,3vw,32px)!important}
+.pru-inline-learning #toggleTabBtn{margin-top:clamp(18px,2.6vw,28px)!important;margin-bottom:clamp(14px,2vw,22px)!important}
+.pru-inline-learning #modalTabTheoryBtn,
+.pru-inline-learning #modalTabQuizBtn{min-height:44px!important}
+.pru-discovery{margin-bottom:clamp(8px,1.3vw,14px)}
+@media(max-width:600px){
+ .pru-page{padding-top:7px!important}
+ .pru-dashboard{padding-top:10px!important}
+ .pru-inline-learning{padding-top:18px!important;margin-top:18px!important}
+ .pru-inline-learning #infographicBody,
+ .pru-inline-learning #miniQuizBody{padding-top:16px!important;padding-bottom:26px!important}
+ .pru-inline-learning #miniQuizBody > * + *{margin-top:17px!important}
+ .pru-inline-learning #modalScrollArea{padding-bottom:22px!important}
+}
+@media(prefers-reduced-motion:reduce){.pru-tabs{scroll-behavior:auto!important}}
+
+
+/* ===== GAME CARD CORNERS / SELECTED TAB / CLICK ANIMATION ===== */
+.pru-inline-learning #grandGameModal{background:transparent!important;border:0!important;border-radius:20px!important;overflow:visible!important}
+.pru-inline-learning #grandGameModal>.pru-game-shell{
+ border-radius:20px!important;overflow:hidden!important;isolation:isolate!important;
+ background:#101827!important;border:1px solid #283247!important;
+ box-shadow:0 14px 34px rgba(49,34,25,.16)!important;
+ transform:translateZ(0);-webkit-mask-image:-webkit-radial-gradient(white,black);
+}
+.pru-inline-learning #grandGameModal .pru-game-header{
+ border-radius:19px 19px 0 0!important;background:#080e20!important;
+ overflow:hidden!important;position:relative;z-index:1;
+}
+.pru-inline-learning #grandGameModal .pru-game-header .text-\[\#505565\]{color:#c5c9d4!important}
+.pru-inline-learning #grandGameModal #gameStartScreen .text-\[\#505565\]{color:#d0d3dd!important}
+.pru-inline-learning #grandGameModal #gameStartScreen p{color:#d0d3dd!important}
+.pru-tab[aria-selected="true"]{
+ position:relative;z-index:2;
+ box-shadow:0 -5px 18px rgba(255,246,229,.22),0 5px 16px rgba(40,26,17,.24),inset 0 3px 0 #d51e37!important;
+}
+.pru-tab[aria-selected="true"] .pru-tab-icon{filter:drop-shadow(0 3px 4px rgba(185,43,53,.22))}
+.pru-tab-pop{animation:pruTabSelect .3s cubic-bezier(.2,.8,.2,1) both}
+.pru-icon-animate{display:inline-block;animation:pruIconBounce .52s cubic-bezier(.18,.9,.25,1.15) both}
+@keyframes pruTabSelect{0%{filter:brightness(.92)}55%{filter:brightness(1.09)}100%{filter:brightness(1)}}
+@keyframes pruIconBounce{0%{transform:scale(.75) rotate(-13deg)}48%{transform:scale(1.24) rotate(10deg)}75%{transform:scale(.94) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}
+.pru-discovery[open] .pru-discovery-number{animation:pruIconBounce .5s ease-out}
+.pru-discovery-trigger:active .pru-discovery-chevron{transform:scale(.88)}
+@media(max-width:600px){
+ .pru-inline-learning #grandGameModal{border-radius:15px!important}
+ .pru-inline-learning #grandGameModal>.pru-game-shell{border-radius:15px!important}
+ .pru-inline-learning #grandGameModal .pru-game-header{border-radius:14px 14px 0 0!important}
+}
+@media(prefers-reduced-motion:reduce){.pru-tab-pop,.pru-icon-animate,.pru-discovery[open] .pru-discovery-number{animation:none!important}}
+
 </style>
 </head>
 <body class="bg-gradient-to-b from-slate-50 via-slate-100/70 to-slate-200 text-slate-800 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-red-500 selection:text-white">
-
-  <!-- ================= TOP HEADER (COMPACT - ĐÃ BỎ NÚT ÂM THANH & ĐẤU TRƯỜNG) ================= -->
-  <header class="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-3 pb-1">
-    <div class="flex items-center justify-between gap-2">
-      <!-- Brand Logo & Header Info -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-pru-red to-pru-darkred p-1.5 flex items-center justify-center shadow-md shadow-red-500/25 text-white font-black text-sm sm:text-lg shrink-0">
-          PRU
-        </div>
-        <div>
-          <span class="text-[9px] sm:text-[10px] font-black tracking-wider text-pru-red uppercase block leading-none">PRUDENTIAL • ILP 2005</span>
-          <h1 class="text-sm sm:text-xl font-black text-slate-900 leading-tight">PRU-Đầu Tư Vững Tiến</h1>
-        </div>
-      </div>
-
-      <!-- Nút Âm Thanh Nổi Bật Để Người Dùng Nhận Biết Và Test Trực Tiếp -->
-      <button 
-        type="button" 
-        id="btnSoundToggle"
-        onclick="toggleSoundManual(this)" 
-        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 text-[11px] font-black hover:bg-emerald-500/20 active:scale-95 transition cursor-pointer"
-        title="Bật/Tắt âm thanh tương tác">
-        <span id="soundIcon">🔊</span>
-        <span id="soundText">Âm thanh: BẬT</span>
-      </button>
-    </div>
-  </header>
 
   <!-- ================= TAB-BASED BENEFITS EXPERIENCE ================= -->
 <main class="pru-page">
@@ -850,7 +884,6 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
     <p>Chọn từng nội dung để tìm hiểu quyền lợi và ôn tập kiến thức sản phẩm.</p>
   </div>
   <div class="pru-dashboard">
-    <div class="pru-dashboard-top"><div class="pru-dashboard-brand"><span class="pru-brand-dot"></span> PRU <span> / TRUNG TÂM QUYỀN LỢI</span></div><span class="pru-dashboard-indicator">● KHÁM PHÁ & ÔN TẬP</span></div>
     <div class="pru-tabs" role="tablist" aria-label="Các phần quyền lợi sản phẩm"><button type="button" class="pru-tab" id="pruTab0" role="tab" aria-selected="true" aria-controls="pruPanel0" tabindex="0" onclick="selectBenefitTab(0)"><span class="pru-tab-icon">🛡️</span><span>An tâm trọn vẹn</span></button><button type="button" class="pru-tab" id="pruTab1" role="tab" aria-selected="false" aria-controls="pruPanel1" tabindex="-1" onclick="selectBenefitTab(1)"><span class="pru-tab-icon">📈</span><span>Đầu tư tin cậy</span></button><button type="button" class="pru-tab" id="pruTab2" role="tab" aria-selected="false" aria-controls="pruPanel2" tabindex="-1" onclick="selectBenefitTab(2)"><span class="pru-tab-icon">🌱</span><span>Tích lũy tài sản</span></button><button type="button" class="pru-tab" id="pruTab3" role="tab" aria-selected="false" aria-controls="pruPanel3" tabindex="-1" onclick="selectBenefitTab(3)"><span class="pru-tab-icon">🤝</span><span>Vẹn toàn trách nhiệm</span></button><button type="button" class="pru-tab" id="pruTab4" role="tab" aria-selected="false" aria-controls="pruPanel4" tabindex="-1" onclick="selectBenefitTab(4)"><span class="pru-tab-icon">🏆</span><span>Ôn tập</span></button></div>
     <div class="pru-dashboard-body" id="pruScrollViewport" tabindex="0" aria-label="Cuộn để xem nội dung chi tiết">
       <div class="pru-loading" id="pruLoading" aria-hidden="true"><div class="pru-loading-spinner"></div><span>ĐANG TẢI NỘI DUNG...</span></div>
@@ -1117,10 +1150,10 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
 
   <!-- ================= GRAND REVIEW GAME: ĐẤU TRƯỜNG TỔNG ÔN ================= -->
   <div id="grandGameModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="relative bg-slate-900 text-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-800 flex flex-col max-h-[92vh] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+    <div class="pru-game-shell relative bg-slate-900 text-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-800 flex flex-col max-h-[92vh] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
       
       <!-- Top Bar -->
-      <div class="px-6 py-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+      <div class="pru-game-header px-6 py-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <span class="text-2xl animate-spin" style="animation-duration: 8s;">🏆</span>
           <div>
@@ -1377,11 +1410,27 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
     const totalCards = 5;
     function selectBenefitTab(index, focusTab = false) {
       activeBenefitTab = (index + totalCards) % totalCards;
+      const activeTabElement = document.getElementById('pruTab' + activeBenefitTab);
+      if (activeTabElement) {
+        activeTabElement.classList.remove('pru-tab-pop');
+        void activeTabElement.offsetWidth;
+        activeTabElement.classList.add('pru-tab-pop');
+      }
       document.querySelectorAll('.pru-tab').forEach((tab,i)=>{
         const selected = i === activeBenefitTab;
         tab.setAttribute('aria-selected',String(selected));
         tab.tabIndex = selected ? 0 : -1;
-        if (focusTab && selected) tab.focus();
+        if (focusTab && selected) tab.focus({preventScroll:true});
+        if (selected) {
+          const strip = tab.closest('.pru-tabs');
+          if (strip && strip.scrollWidth > strip.clientWidth + 2) {
+            const desiredLeft = tab.offsetLeft - strip.offsetLeft - (strip.clientWidth - tab.offsetWidth) / 2;
+            strip.scrollTo({
+              left: Math.max(0, Math.min(desiredLeft, strip.scrollWidth - strip.clientWidth)),
+              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'
+            });
+          }
+        }
       });
       document.querySelectorAll('.pru-panel').forEach((panel,i)=>{panel.hidden = i !== activeBenefitTab;});
       document.querySelectorAll('.pru-step-item').forEach((step,i)=>step.classList.toggle('is-active',i===activeBenefitTab));
@@ -1393,6 +1442,12 @@ body{width:100%;max-width:100%;overflow-x:hidden!important}
         clearTimeout(pruLoadingTimer);
       }
       renderInlineBenefit(activeBenefitTab);
+      const selectedIcon = activeTabElement?.querySelector('.pru-tab-icon');
+      if (selectedIcon) {
+        selectedIcon.classList.remove('pru-icon-animate');
+        void selectedIcon.offsetWidth;
+        selectedIcon.classList.add('pru-icon-animate');
+      }
       requestAnimationFrame(() => {
         setupPruReveal();
         updatePruScrollHint();
