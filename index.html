@@ -712,6 +712,105 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
 }
 @media(prefers-reduced-motion:reduce){.pru-discovery-trigger,.pru-discovery-chevron{transition:none!important}}
 
+
+/* ===== FINAL MOBILE RESPONSIVE PASS ===== */
+:root{--mobile-gutter:clamp(9px,3vw,16px)}
+*{min-width:0}
+body{width:100%;max-width:100%;overflow-x:hidden!important}
+.pru-dashboard,.pru-dashboard-body,.pru-inline-learning,.pru-infographic{max-width:100%}
+.pru-tabs{scroll-padding-inline:8px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.pru-tab{flex-shrink:0}
+.pru-dashboard-body{scrollbar-gutter:stable}
+.pru-info-section,.pru-fact-card,.pru-discovery-content{overflow-wrap:anywhere}
+.pru-infographic img,.pru-infographic svg{max-width:100%}
+.pru-infographic table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pru-inline-learning #infographicModal,.pru-inline-learning #grandGameModal{min-width:0}
+.pru-inline-learning #infographicModal>div,.pru-inline-learning #grandGameModal>div{min-width:0}
+.pru-inline-learning #infographicBody{min-width:0}
+.pru-inline-learning #infographicBody .grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+@media(max-width:600px){
+  header{padding:6px var(--mobile-gutter) 2px!important}
+  header h1{font-size:clamp(.9rem,3.4vw,1.14rem)!important;line-height:1.2!important}
+  .pru-page{padding:4px var(--mobile-gutter) 8px!important}
+  .pru-intro{margin:0 auto 8px!important}
+  .pru-overline{font-size:.58rem!important;letter-spacing:.1em!important}
+  .pru-intro h2{font-size:clamp(1.08rem,4.6vw,1.45rem)!important;margin:2px 0 3px!important;line-height:1.15!important}
+  .pru-intro p{font-size:clamp(.7rem,2.6vw,.8rem)!important;line-height:1.3!important}
+  .pru-dashboard{border-radius:18px!important;padding:7px 7px 8px!important}
+  .pru-dashboard-top{padding:3px 9px 8px!important}
+  .pru-dashboard-brand{font-size:.7rem!important}
+  .pru-dashboard-brand span:last-child{font-size:.65rem!important}
+  .pru-tabs{gap:4px!important}
+  .pru-tab{font-size:clamp(.76rem,3vw,.88rem)!important;padding:10px 13px!important;min-height:43px!important;border-radius:12px 12px 0 0!important}
+  .pru-tab-icon{font-size:1rem!important}
+  .pru-dashboard-body{padding:10px 11px 36px!important;scrollbar-gutter:auto}
+  .pru-scroll-hint{position:relative!important;top:auto!important;margin:0 auto 8px!important;font-size:.57rem!important;padding:6px 10px!important}
+  .pru-panel-topline{margin:0 0 9px!important}
+  .pru-pill{font-size:.65rem!important;padding:6px 11px!important}
+  .pru-panel-counter{font-size:.68rem!important}
+  .pru-panel-grid{display:flex!important;flex-direction:column!important;gap:11px!important;padding:0!important}
+  .pru-illustration{width:100%;min-height:110px!important;max-height:132px!important;border-radius:14px!important}
+  .pru-illustration .my-auto{padding:7px 10px!important;gap:5px!important}
+  .pru-illustration .my-auto>div{width:64px!important;height:64px!important}
+  .pru-illustration .my-auto span{font-size:clamp(.62rem,2.5vw,.73rem)!important;line-height:1.3!important;max-width:100%!important}
+  .pru-panel-content{width:100%}
+  .pru-eyebrow{font-size:.64rem!important;margin:0 0 4px!important;letter-spacing:.09em!important}
+  .pru-panel-content h3{font-size:clamp(1.14rem,4.8vw,1.5rem)!important;margin:0 0 7px!important;line-height:1.16!important}
+  .pru-description{font-size:clamp(.82rem,3.25vw,.96rem)!important;line-height:1.5!important;margin:0!important}
+  .pru-panel-foot{padding:10px 0 0!important;margin-top:11px!important;font-size:clamp(.71rem,2.9vw,.82rem)!important;line-height:1.45!important}
+  .pru-inline-learning{margin-top:10px!important;padding-top:12px!important}
+  .pru-inline-learning #modalHeaderBg{padding:12px!important;gap:8px!important}
+  .pru-inline-learning #modalHeaderTitle{font-size:clamp(1rem,4.2vw,1.25rem)!important;line-height:1.2!important}
+  .pru-inline-learning #modalHeaderTag{font-size:clamp(.58rem,2.35vw,.69rem)!important;line-height:1.35!important}
+  .pru-inline-learning #modalHeaderIcon{width:40px!important;height:40px!important;flex:none!important}
+  .pru-inline-learning #modalScrollArea{padding:10px!important}
+  .pru-discovery-intro{font-size:.78rem!important;line-height:1.5!important;padding:10px 12px!important}
+  .pru-discovery-trigger{padding:11px!important}
+  .pru-discovery-content .pru-info-section{padding:12px!important}
+  .pru-discovery-heading{font-size:clamp(.84rem,3.2vw,.98rem)!important}
+  .pru-info-heading{font-size:clamp(.95rem,3.5vw,1.15rem)!important}
+  .pru-fact-card{padding:12px!important}
+  .pru-infographic .text-xs{font-size:.78rem!important}
+  .pru-infographic .text-sm{font-size:.84rem!important}
+}
+@media(max-width:360px){
+  .pru-dashboard{padding:6px!important}
+  .pru-dashboard-body{padding:9px!important}
+  .pru-tab{padding:9px 10px!important;font-size:.74rem!important}
+  .pru-illustration{max-height:114px!important;min-height:100px!important}
+  .pru-illustration .my-auto>div{width:52px!important;height:52px!important}
+  .pru-panel-content h3{font-size:1.1rem!important}
+  .pru-description{font-size:.8rem!important}
+  .pru-discovery-trigger{grid-template-columns:28px minmax(0,1fr) 18px!important}
+  .pru-discovery-number{width:28px!important;height:28px!important}
+}
+@media(min-width:601px) and (max-width:900px){
+  .pru-panel-grid{grid-template-columns:minmax(180px,.8fr) minmax(0,1.2fr)!important;gap:20px!important}
+  .pru-illustration{min-height:210px!important}
+  .pru-panel-content h3{font-size:clamp(1.4rem,3vw,2rem)!important}
+  .pru-description{font-size:.94rem!important}
+}
+@media(max-height:600px) and (orientation:landscape){
+  header{padding-top:2px!important}
+  .pru-intro{margin-bottom:3px!important}
+  .pru-intro p,.pru-overline{display:none!important}
+  .pru-dashboard-top{padding-bottom:4px!important}
+  .pru-tab{min-height:36px!important;padding:7px 12px!important}
+  .pru-dashboard-body{padding-top:8px!important}
+  .pru-illustration{min-height:90px!important;max-height:105px!important}
+}
+
+
+/* Unified discovery arrows: circular, accessible tap targets */
+.pru-discovery-chevron{display:grid!important;place-items:center!important;width:38px!important;height:38px!important;border-radius:12px!important;background:#f3e3d9!important;color:#ae2338!important;font-size:initial!important;transform:none!important;transition:background .2s ease,color .2s ease!important}
+.pru-discovery-chevron svg{display:block;transition:transform .25s ease;transform-origin:center}
+.pru-discovery[open] .pru-discovery-chevron{background:#c9253e!important;color:#fff!important;transform:none!important}
+.pru-discovery[open] .pru-discovery-chevron svg{transform:rotate(180deg)}
+.pru-discovery-trigger:hover .pru-discovery-chevron{background:#e9cdbd!important}
+.pru-discovery[open] .pru-discovery-trigger:hover .pru-discovery-chevron{background:#a81e32!important}
+@media(max-width:640px){.pru-discovery-trigger{grid-template-columns:32px minmax(0,1fr) 38px!important}.pru-discovery-chevron{grid-column:3!important;grid-row:1 / span 2!important;width:36px!important;height:36px!important}}
+@media(max-width:360px){.pru-discovery-trigger{grid-template-columns:28px minmax(0,1fr) 34px!important}.pru-discovery-chevron{width:34px!important;height:34px!important}}
+@media(prefers-reduced-motion:reduce){.pru-discovery-chevron svg{transition:none!important}}
 </style>
 </head>
 <body class="bg-gradient-to-b from-slate-50 via-slate-100/70 to-slate-200 text-slate-800 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-red-500 selection:text-white">
@@ -1333,7 +1432,7 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
         const chevron = document.createElement('span');
         chevron.className = 'pru-discovery-chevron';
         chevron.setAttribute('aria-hidden','true');
-        chevron.textContent = '⌄';
+        chevron.innerHTML = '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'; 
         summary.append(number, heading, action, chevron);
         details.append(summary);
         section.classList.add('pru-info-section');
@@ -1447,13 +1546,13 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
       1: {
         id: 1,
         title: "① AN TÂM TRỌN VẸN",
-        tag: "SLIDE 04, 05, 06, 07 • NGUYÊN VĂN BROCHURE",
+        tag: "NỘI DUNG QUYỀN LỢI SẢN PHẨM",
         bgClass: "bg-gradient-to-r from-red-600 to-rose-700",
         iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`,
         contentHtml: `
           <!-- KHỐI ĐIỂM NỔI BẬT & ĐIỀU KIỆN THAM GIA (SLIDE 04 & 05) -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-pru-red shadow-sm">
-            <span class="text-[10px] font-black uppercase text-pru-red tracking-wider block">SLIDE 04 & 05 • TỔNG QUAN & ĐIỀU KIỆN THAM GIA</span>
+            <span class="text-[10px] font-black uppercase text-pru-red tracking-wider block">TỔNG QUAN & ĐIỀU KIỆN THAM GIA</span>
             <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">ĐIỂM NỔI BẬT CỦA SẢN PHẨM & AI CÓ THỂ THAM GIA PRU-ĐẦU TƯ VỮNG TIẾN</h4>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -1498,7 +1597,7 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
 
           <!-- CHI TIẾT QUYỀN LỢI BẢO HIỂM RỦI RO (SLIDE 06 & 07) -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-red-500 shadow-sm mt-6">
-            <span class="text-[10px] font-black uppercase text-pru-red tracking-wider block">SLIDE 06 & 07 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <span class="text-[10px] font-black uppercase text-pru-red tracking-wider block">CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
             <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">① AN TÂM TRỌN VẸN</h4>
             <p class="text-xs text-slate-700 font-semibold mt-1">với quyền lợi bảo vệ lên đến 110% Số Tiền Bảo Hiểm cộng với Giá Trị Tài Khoản Hợp Đồng, mang lại sự an tâm cho Khách Hàng và gia đình trước các rủi ro trong cuộc sống.</p>
 
@@ -1575,13 +1674,13 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
       2: {
         id: 2,
         title: "② ĐẦU TƯ CÓ TRÁCH NHIỆM VÀ TIN CẬY",
-        tag: "SLIDE 08, 09, 10 • NGUYÊN VĂN BROCHURE",
+        tag: "NỘI DUNG QUYỀN LỢI SẢN PHẨM",
         bgClass: "bg-gradient-to-r from-sky-600 to-blue-800",
         iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>`,
         contentHtml: `
           <!-- NGUYÊN VĂN SLIDE 08 -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-sky-600 shadow-sm">
-            <span class="text-[10px] font-black uppercase text-sky-700 tracking-wider block">SLIDE 08 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <span class="text-[10px] font-black uppercase text-sky-700 tracking-wider block">CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
             <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">② ĐẦU TƯ CÓ TRÁCH NHIỆM VÀ TIN CẬY</h4>
             <p class="text-xs text-slate-700 font-semibold mt-1">thông qua 7 Quỹ liên kết đơn vị PRUlink ("Quỹ PRUlink") giúp khách hàng và gia đình vững bước tiến xa</p>
 
@@ -1598,7 +1697,7 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
 
           <!-- NGUYÊN VĂN SLIDE 10 (PHẦN ƯU ĐIỂM) -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-sky-500 shadow-sm mt-5">
-            <span class="text-[10px] font-black uppercase text-sky-700 tracking-wider block">SLIDE 10 • ƯU ĐIỂM KHI ĐẦU TƯ THÔNG QUA CÔNG TY QUẢN LÝ QUỸ</span>
+            <span class="text-[10px] font-black uppercase text-sky-700 tracking-wider block">ƯU ĐIỂM KHI ĐẦU TƯ THÔNG QUA CÔNG TY QUẢN LÝ QUỸ</span>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
               <div class="bg-white p-3.5 rounded-xl border border-sky-100 flex flex-col justify-between">
                 <div class="text-2xl mb-1.5">🌐</div>
@@ -1618,7 +1717,7 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
           <!-- BẢNG NGUYÊN VĂN SLIDE 09: TỶ SUẤT ĐẦU TƯ THỰC TẾ CỦA CÁC QUỸ PRULINK -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-blue-600 shadow-sm mt-5">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <span class="text-[10px] font-black uppercase text-blue-700 tracking-wider block">SLIDE 09 • TỶ SUẤT ĐẦU TƯ THỰC TẾ CỦA CÁC QUỸ PRULINK</span>
+              <span class="text-[10px] font-black uppercase text-blue-700 tracking-wider block">TỶ SUẤT ĐẦU TƯ THỰC TẾ CỦA CÁC QUỸ PRULINK</span>
               <span class="text-[11px] text-slate-500 font-bold">(Nguồn: Eastspring Việt Nam)</span>
             </div>
             
@@ -1725,13 +1824,13 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
       3: {
         id: 3,
         title: "③ CƠ HỘI GIA TĂNG TÍCH LŨY TÀI SẢN HIỆU QUẢ",
-        tag: "SLIDE 10 & 11 • NGUYÊN VĂN BROCHURE",
+        tag: "NỘI DUNG QUYỀN LỢI SẢN PHẨM",
         bgClass: "bg-gradient-to-r from-amber-500 to-orange-600",
         iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
         contentHtml: `
           <!-- NGUYÊN VĂN SLIDE 10 & 11: TIÊU ĐỀ & KHOẢN THƯỞNG KÉP -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-amber-500 shadow-sm">
-            <span class="text-[10px] font-black uppercase text-amber-800 tracking-wider block">SLIDE 10 & 11 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <span class="text-[10px] font-black uppercase text-amber-800 tracking-wider block">CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
             <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">③ CƠ HỘI GIA TĂNG TÍCH LŨY TÀI SẢN HIỆU QUẢ</h4>
             <p class="text-xs text-slate-700 font-semibold mt-1">với khoản thưởng kép hấp dẫn ngay từ Năm Hợp Đồng thứ 10</p>
           </div>
@@ -1818,7 +1917,7 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
 
           <!-- QUYỀN LỢI ĐÁO HẠN HỢP ĐỒNG (SLIDE 11) -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-emerald-600 shadow-sm mt-5">
-            <span class="text-[10px] font-black uppercase text-emerald-800 tracking-wider block">SLIDE 11 • KẾT THÚC THỜI HẠN BẢO HIỂM</span>
+            <span class="text-[10px] font-black uppercase text-emerald-800 tracking-wider block">KẾT THÚC THỜI HẠN BẢO HIỂM</span>
             <h5 class="text-sm sm:text-base font-black text-slate-900 mt-1">QUYỀN LỢI ĐÁO HẠN HỢP ĐỒNG</h5>
             <div class="mt-2 p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center font-black text-sm text-emerald-950">
               100% Giá Trị Tài Khoản Hợp Đồng tại Ngày Định Giá Kế Tiếp ngay sau Ngày Đáo Hạn Hợp Đồng
@@ -1836,13 +1935,13 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
       4: {
         id: 4,
         title: "④ VẸN TOÀN TRÁCH NHIỆM YÊU THƯƠNG",
-        tag: "SLIDE 12 & 13 • NGUYÊN VĂN BROCHURE",
+        tag: "NỘI DUNG QUYỀN LỢI SẢN PHẨM",
         bgClass: "bg-gradient-to-r from-purple-700 to-indigo-800",
         iconSvg: `<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>`,
         contentHtml: `
           <!-- NGUYÊN VĂN SLIDE 12: ĐẶC QUYỀN CHUYỂN GIAO -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-purple-600 shadow-sm">
-            <span class="text-[10px] font-black uppercase text-purple-700 tracking-wider block">SLIDE 12 • CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
+            <span class="text-[10px] font-black uppercase text-purple-700 tracking-wider block">CHI TIẾT QUYỀN LỢI SẢN PHẨM</span>
             <h4 class="text-base sm:text-lg font-black text-slate-900 mt-1">④ VẸN TOÀN TRÁCH NHIỆM YÊU THƯƠNG</h4>
             <p class="text-xs text-slate-700 font-semibold mt-1">với đặc quyền chuyển giao giá trị tích lũy thông qua quyền tham gia Hợp Đồng Bảo Hiểm mới (9)</p>
 
@@ -1872,7 +1971,7 @@ header{flex:0 0 auto;padding-top:clamp(8px,1.5vh,15px)!important;padding-bottom:
 
           <!-- NGUYÊN VĂN SLIDE 13: CÁC QUYỀN CỦA BÊN MUA BẢO HIỂM -->
           <div class="surface-3d p-5 rounded-2xl border-l-4 border-indigo-600 shadow-sm mt-5">
-            <span class="text-[10px] font-black uppercase text-indigo-700 tracking-wider block">SLIDE 13 • LINH HOẠT TÀI CHÍNH</span>
+            <span class="text-[10px] font-black uppercase text-indigo-700 tracking-wider block">LINH HOẠT TÀI CHÍNH</span>
             <h5 class="text-sm sm:text-base font-black text-slate-900 mt-1">CÁC QUYỀN CỦA BÊN MUA BẢO HIỂM</h5>
             <p class="text-xs text-slate-700 font-semibold mt-1">Chủ động thực hiện các quyền linh hoạt giúp Khách hàng hoạch định các mục tiêu bảo vệ và gia tăng tài sản theo nhu cầu tài chính:</p>
 
